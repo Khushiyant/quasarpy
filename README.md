@@ -1,4 +1,4 @@
-<img src="/assets/logo_complete_tbg.png" width="300" height="300" />
+<img src="assets/logo_complete_svg.svg" width="300" height="300" />
 
 ## Overview
 ![GitHub](https://img.shields.io/github/license/Khushiyant/quasar?&style=for-the-badge)
