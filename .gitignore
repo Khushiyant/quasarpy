@@ -27,3 +27,14 @@ ENV/
 # Miscellaneous
 *.pyc
 .DS_Store
+*.docx
+*.pdf
+
+# Env files
+
+.env.local
+.env
+
+# Test
+
+test_local/
