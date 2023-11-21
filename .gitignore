@@ -38,3 +38,5 @@ ENV/
 # Test
 
 test_local/
+
+*.ipynb
