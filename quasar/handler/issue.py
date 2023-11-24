@@ -1,7 +1,6 @@
 from github import Github, Auth
 
 from dataclasses import dataclass
-from typing import List
 
 from quasar.utils.logger import logger
 
@@ -26,7 +25,7 @@ class IssueHandler:
             logger.error(e)
             return False
 
-    def _validate_token(self, token: str) -> bool:
+    def _validate_token(self, auth: Auth.Token) -> bool:
         try:
             self.github = Github(auth=auth)
             return True
