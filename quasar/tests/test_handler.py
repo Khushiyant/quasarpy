@@ -14,8 +14,7 @@ def test_issue_with_label() -> None:
     assert issue.body == 'test'
     assert issue.label == 'bug'
 
-def test_invalid_token() -> None:
-    issue = Issue(title='test', body='test')
+def test_invalid_token(issue) -> None:
     with pytest.raises(ValueError):
         handler = IssueHandler(repo='test', token='test')
         handler.create_issue(issue)
