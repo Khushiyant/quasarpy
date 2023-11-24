@@ -4,8 +4,6 @@ import pandas as pd
 from abc import ABC, abstractmethod
 
 # load the model from disk
-class_model = pkl.load(open('class_model.sav', 'rb'))
-method_model = pkl.load(open('method_model.sav', 'rb'))
 
 class Detector(ABC):
     @abstractmethod
@@ -14,14 +12,16 @@ class Detector(ABC):
 
 
 class ClassDetector(Detector):
-    def detect(self, data, thresold):
-        return class_model.predict(data)
+    class_model = pkl.load(open('quasar/algorithm/model/class_model.sav', 'rb'))
+    def detect(self, data):
+        return self.class_model.predict(data)[0]
 
 
 class MethodDetector(Detector):
-    def detect(self, data, thresold):
-        return method_model.predict(data)
+    method_model = pkl.load(open('quasar/algorithm/model/method_model.sav', 'rb'))
+    def detect(self, data):
+        return self.method_model.predict(data)[0]
 
 
-def detect_smell(data, detector, thresold):
+def detect_smell(data, detector):
     return detector.detect(data)
