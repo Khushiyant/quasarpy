@@ -1,5 +1,5 @@
-                                                                                                               
-                                                                                                               
+ASCII_ART = """
+                                                                                                                                                                                                         
    qqqqqqqqq   qqqqquuuuuu    uuuuuu    aaaaaaaaaaaaa       ssssssssss     aaaaaaaaaaaaa   rrrrr   rrrrrrrrr   
   q:::::::::qqq::::qu::::u    u::::u    a::::::::::::a    ss::::::::::s    a::::::::::::a  r::::rrr:::::::::r  
  q:::::::::::::::::qu::::u    u::::u    aaaaaaaaa:::::a ss:::::::::::::s   aaaaaaaaa:::::a r:::::::::::::::::r 
@@ -19,3 +19,4 @@ q:::::::qqqqq:::::q u:::::::::::::::uua::::a    a:::::a s:::::ssss::::::sa::::a 
            q:::::::q                                                                                           
            qqqqqqqqq                                                                                           
                                                                                                                
+"""
