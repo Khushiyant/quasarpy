@@ -2,28 +2,41 @@ from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 import numpy as np
 import pickle
+from enum import Enum
+from typing import Optional
+import os
 
-class_train_model = RandomForestClassifier(n_estimators=100, max_depth=2, random_state=0)
-method_train_model = RandomForestClassifier(n_estimators=100, max_depth=2, random_state=0)
 
-class_dataset = pd.read_csv('quasar/algorithm/dataset/Python_LargeClassSmell_Dataset.csv', sep=',')
-method_dataset = pd.read_csv('quasar/algorithm/dataset/Python_LongMethodSmell_Dataset.csv', sep=',')
+class ModelType(Enum):
+    CLASS = 'CLASS'
+    METHOD = 'METHOD'
 
-# TODO: Rewrite this function to be more generic
-def train():
-    X_class = class_dataset.iloc[:, :-1].values
-    y_class = class_dataset.iloc[:, -1].values
 
-    class_train_model.fit(X_class, y_class)
-    pickle.dump(class_train_model, open('quasar/algorithm/model/class_model.sav', 'wb'))
+def train(type: str, dataset: Optional[str] = None, output: Optional[str] = None):
+    def trainer(type: ModelType, dataset: str, output: Optional[str] = None):
+        if type == ModelType.CLASS.value:
+            dataset = 'quasar/algorithm/dataset/Python_LargeClassSmell_Dataset.csv'
+        else:
+            dataset = 'quasar/algorithm/dataset/Python_LongMethodSmell_Dataset.csv'
 
-    X_method = method_dataset.iloc[:, :-1].values
-    y_method = method_dataset.iloc[:, -1].values
+        df = pd.read_csv(dataset, sep=',')
+        X = df.iloc[:, :-1].values
+        y = df.iloc[:, -1].values
 
-    method_train_model.fit(X_method, y_method)
-    pickle.dump(method_train_model, open('quasar/algorithm/model/method_model.sav', 'wb'))
+        model = RandomForestClassifier(
+            n_estimators=100, max_depth=2, random_state=0)
+        model.fit(X, y)
+        pickle.dump(model, open(output, 'wb'))
+
+    output = '.' if not output else output
+    if dataset:
+        if not os.path.exists(dataset):
+            raise ValueError('Invalid dataset path.')
+        else:
+            trainer(type, dataset, output)
+    else:
+        trainer(type, output)
 
 
 if __name__ == "__main__":
     train()
-    
