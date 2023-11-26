@@ -9,6 +9,7 @@ DB = os.getenv('DB', 0)
 
 r = redis.Redis(host=LOCALHOST, port=DB_PORT, db=DB)
 
+
 @dataclass
 class RedisServer:
     r = redis.Redis(host=LOCALHOST, port=DB_PORT, db=DB)
@@ -25,11 +26,10 @@ class RedisServer:
     def get_all_keys(self):
         return self.r.keys()
 
+
 if __name__ == '__main__':
     server = RedisServer()
     server.set_value('key', 'value')
     # server.set_value('key', 'value')
-    # print(timeit.timeit(lambda: server.get_value('key'), number=10000)) # 1.0435702909890097
-
-    
-
+    # print(timeit.timeit(lambda: server.get_value('key'), number=10000)) #
+    # 1.0435702909890097

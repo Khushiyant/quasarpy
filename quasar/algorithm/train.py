@@ -2,17 +2,13 @@ from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 import numpy as np
 import pickle
-from enum import Enum
+from quasar.config import ModelType
 from typing import Optional
 import os
 
 
-class ModelType(Enum):
-    CLASS = 'CLASS'
-    METHOD = 'METHOD'
-
-
-def train(type: str, dataset: Optional[str] = None, output: Optional[str] = None):
+def train(type: str, dataset: Optional[str]
+          = None, output: Optional[str] = None):
     def trainer(type: ModelType, dataset: str, output: Optional[str] = None):
         if type == ModelType.CLASS.value:
             dataset = 'quasar/algorithm/dataset/Python_LargeClassSmell_Dataset.csv'

@@ -1,24 +1,26 @@
 '''This module contains the main() function, which is the entry point for the
 command line interface.'''
 from dotenv import load_dotenv
+from logging import ERROR, INFO, DEBUG
+from quasar.utils import ASCII_ART
 
 load_dotenv()
 
 __version__ = '0.1.0'
 
+
 def main():
     import sys
-    from quasar.cli import program, logger
+    from quasar.cli import logger, cli
 
     if not sys.argv[1:]:
-        sys.argv.append('-h')
+        sys.argv.append('--help')
     try:
-        with open('./assets/quasar.txt', 'r') as art:
-            print(art.read())
-        program()
+        print(ASCII_ART)
+        cli()
     except Exception as e:
-        logger.log(e)
-        
+        logger.log(level=INFO, msg=e)
+
 
 if __name__ == "__main__":
     main()

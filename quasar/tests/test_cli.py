@@ -1,7 +1,7 @@
 import pytest
 from click.testing import CliRunner
 from quasar.cli import smell
-from quasar.cli import SmellType, FormatterType
+from quasar.config import SmellType, FormatterType
 
 
 def test_smell_with_class_smell_type() -> None:
