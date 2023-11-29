@@ -40,3 +40,6 @@ ENV/
 test_local/
 
 *.ipynb
+
+# Coverage
+.coverage
