@@ -5,11 +5,12 @@ import pickle
 from quasar.config import ModelType
 from typing import Optional
 import os
+from quasar.utils.logger import logger
 
 
 def train(type: str, dataset: Optional[str]
           = None, output: Optional[str] = None):
-    def trainer(type: ModelType, dataset: str, output: Optional[str] = None):
+    def _trainer():
         if type == ModelType.CLASS.value:
             dataset = 'quasar/algorithm/dataset/Python_LargeClassSmell_Dataset.csv'
         else:
@@ -21,17 +22,19 @@ def train(type: str, dataset: Optional[str]
 
         model = RandomForestClassifier(
             n_estimators=100, max_depth=2, random_state=0)
-        model.fit(X, y)
-        pickle.dump(model, open(output, 'wb'))
+        try:
+            model.fit(X, y)
+            pickle.dump(model, open(f"{output}/{type}.pkl", 'wb'))
+            logger.info(f"Model saved to {output}/{type}.pkl")
+        except Exception as e:
+            logger.error(f"Error while training model: {e}")
 
     output = '.' if not output else output
     if dataset:
         if not os.path.exists(dataset):
             raise ValueError('Invalid dataset path.')
-        else:
-            trainer(type, dataset, output)
-    else:
-        trainer(type, output)
+
+    _trainer()
 
 
 if __name__ == "__main__":
