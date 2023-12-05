@@ -1,10 +1,6 @@
-from sklearn.ensemble import RandomForestClassifier
 import pickle as pkl
-import pandas as pd
 from abc import ABC, abstractmethod
 import os
-
-# load the model from disk
 
 
 class Detector(ABC):

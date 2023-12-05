@@ -13,8 +13,6 @@ def main():
     import sys
     from quasar.cli import logger, cli
 
-    if not sys.argv[1:]:
-        sys.argv.append('--help')
     try:
         print(ASCII_ART)
         cli()
