@@ -1,0 +1,4 @@
+include *.pkl
+include *.sav
+include tests*/*.py
+include docs/*
