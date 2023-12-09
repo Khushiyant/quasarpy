@@ -11,14 +11,14 @@ setup(name='quasar',
       author='Khushiyant',
       author_email='khushiyant2002@gmail.com',
       project_urls={
-        'Source': '',
+          'Source': '',
       },
       license='GNU',
       description='Python Smell Detector for Python',
       platforms='any',
       long_description=readme,
       packages=find_packages(),
-      
+
       entry_points={
           'console_scripts': ['quasar = quasar:main'],
           'setuptools.installation': [
@@ -39,4 +39,4 @@ setup(name='quasar',
           'Topic :: Software Development :: Quality Assurance',
           'Topic :: Utilities',
       ]
-)
+      )

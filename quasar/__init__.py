@@ -14,6 +14,7 @@ def main():
     from quasar.cli import logger, cli
 
     try:
+        
         print(ASCII_ART)
         cli()
     except Exception as e:
