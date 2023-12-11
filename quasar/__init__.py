@@ -2,7 +2,7 @@
 command line interface.'''
 from dotenv import load_dotenv
 from logging import ERROR, INFO, DEBUG
-from quasar.utils import ASCII_ART
+
 
 load_dotenv()
 
@@ -14,8 +14,6 @@ def main():
     from quasar.cli import logger, cli
 
     try:
-        
-        print(ASCII_ART)
         cli()
     except Exception as e:
         logger.log(level=INFO, msg=e)
