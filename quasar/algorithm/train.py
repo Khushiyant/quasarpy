@@ -8,14 +8,8 @@ import os
 from quasar.utils.logger import logger
 
 
-def train(type: str, dataset: Optional[str]
-          = None, output: Optional[str] = None):
+def train(type: str, dataset: str = None, output: Optional[str] = os.path.expanduser('~')):
     def _trainer():
-        if type == ModelType.CLASS.value:
-            dataset = 'quasar/algorithm/dataset/Python_LargeClassSmell_Dataset.csv'
-        else:
-            dataset = 'quasar/algorithm/dataset/Python_LongMethodSmell_Dataset.csv'
-
         df = pd.read_csv(dataset, sep=',')
         X = df.iloc[:, :-1].values
         y = df.iloc[:, -1].values
@@ -29,7 +23,6 @@ def train(type: str, dataset: Optional[str]
         except Exception as e:
             logger.error(f"Error while training model: {e}")
 
-    output = '.' if not output else output
     if dataset:
         if not os.path.exists(dataset):
             raise ValueError('Invalid dataset path.')
