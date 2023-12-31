@@ -1,6 +1,6 @@
 import pytest
 from quasar.algorithm import train
-from quasar.config import ModelType
+from quasar.types import ModelType
 
 
 def test_train_with_invalid_dataset_path() -> None:
