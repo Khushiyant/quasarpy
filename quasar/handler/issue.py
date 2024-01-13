@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from quasar.utils.logger import logger
 
+import click
 
 @dataclass
 class Issue:
@@ -36,11 +37,11 @@ class IssueHandler:
     def create_issue(self, issue: Issue) -> None:
         if not self._validate_token(self.auth):
             logger.error('Invalid token.')
-            raise ValueError('Invalid token.')
+            raise click.UsageError('Invalid token.')
 
         if not self._validate_repo(self.repo):
             logger.error('Invalid repository.')
-            raise ValueError('Invalid repository.')
+            raise click.UsageError('Invalid repository.')
 
         self.repo.create_issue(title=issue.title, body=issue.body,
                                labels=[issue.label])
