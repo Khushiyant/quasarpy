@@ -57,7 +57,7 @@ class MainDetector(Detector):
         return self.class_model.predict(data)[0]
 
 
-def detect_smell(data, detector: Detector, model_type: str):
+def detect_smell(data, detector: Detector, model_type: str) -> int:
     """
     Detects smell in the given data using the specified detector and model type.
 
@@ -67,7 +67,7 @@ def detect_smell(data, detector: Detector, model_type: str):
         model_type: The type of model used for smell detection.
 
     Returns:
-        The result of smell detection.
+        The result of smell detection (int).
 
     """
     return detector._detect(data, model_type)

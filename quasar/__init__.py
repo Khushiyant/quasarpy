@@ -4,13 +4,12 @@ from dotenv import load_dotenv
 from logging import ERROR, INFO, DEBUG
 
 
-load_dotenv()
+load_dotenv() # Load environment variables from .env file
 
 __version__ = '0.1.0'
 
 
 def main():
-    import sys
     from quasar.cli import logger, cli
 
     try:

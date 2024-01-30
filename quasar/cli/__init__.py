@@ -21,7 +21,7 @@ class ASCIICommandClass(click.Group):
 @click.group(name='cli', cls=ASCIICommandClass)
 @click.version_option(__version__, prog_name='Quasar')
 @click.help_option('-h', '--help')
-def cli():
+def cli() -> None:
     pass
 
 
@@ -39,7 +39,7 @@ def train_model(type, dataset, output):
 @click.option('--path', '-p')
 @click.option('--format', '-f',
               type=click.Choice([t.value for t in FormatterType]))
-def detect(type, path, format):
+def detect(type, path, format) -> None:
     """
     Detects the specified type of object in the given path and formats the output.
 
