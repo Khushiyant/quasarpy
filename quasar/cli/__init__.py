@@ -12,6 +12,7 @@ from quasar.types import ModelType, SmellType, FormatterType
 from quasar.utils import ASCII_ART
 from quasar.utils import analyse
 
+
 class ASCIICommandClass(click.Group):
     def get_help(self, ctx):
         return ASCII_ART + '\n' + super().get_help(ctx)
@@ -39,6 +40,20 @@ def train_model(type, dataset, output):
 @click.option('--format', '-f',
               type=click.Choice([t.value for t in FormatterType]))
 def detect(type, path, format):
+    """
+    Detects the specified type of object in the given path and formats the output.
+
+    Args:
+        type (str): The type of object to detect.
+        path (str): The path to the file or directory to be analyzed.
+        format (str): The desired output format ('json' or 'xml').
+
+    Raises:
+        click.BadParameter: If the path is not provided.
+
+    Returns:
+        None
+    """
     detector = MainDetector()
     formatter = JsonFormatter() if format == FormatterType.JSON.value else XmlFormatter()
 

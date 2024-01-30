@@ -38,4 +38,14 @@ class XmlFormatter(Formatter):
 
 
 def formatted_data(data, formatter):
+    """
+    Format the given data using the specified formatter.
+
+    Args:
+        data: The data to be formatted.
+        formatter: The formatter object used for formatting.
+
+    Returns:
+        The formatted data.
+    """
     return formatter.format(data)
