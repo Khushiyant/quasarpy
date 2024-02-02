@@ -24,6 +24,6 @@ RUN chown -R appuser:appuser /app
 COPY . .
 
 # Install the package in editable mode.
-RUN pip install -r requirements/requirements.txt
+RUN pip install poetry && poetry install
 
 USER appuser
