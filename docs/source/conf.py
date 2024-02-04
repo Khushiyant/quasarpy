@@ -11,7 +11,7 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 
-project = 'Quasar'
+project = 'quasar docs'
 copyright = '2024, Khushiyant'
 author = 'Khushiyant'
 release = '0.1.0'

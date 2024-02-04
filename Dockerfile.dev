@@ -1,17 +1,17 @@
 # syntax=docker/dockerfile:1
 
+# Use a specific Python version as the base image
 ARG PYTHON_VERSION=3.9
 FROM python:${PYTHON_VERSION}-slim as base
 
-# Prevents Python from writing pyc files.
-ENV PYTHONDONTWRITEBYTECODE=1
+# Set environment variables to optimize Python runtime
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-# Keeps Python from buffering stdout and stderr to avoid situations where
-# the application crashes without emitting any logs due to buffering.
-ENV PYTHONUNBUFFERED=1
-
+# Set the working directory inside the container
 WORKDIR /app
 
+# Create a non-root user to run the application
 ARG UID=10001
 RUN adduser \
     --disabled-password \
@@ -19,11 +19,14 @@ RUN adduser \
     --uid "${UID}" \
     appuser
 
+# Change ownership of the working directory to the non-root user
 RUN chown -R appuser:appuser /app
 
+# Copy the application code into the container
 COPY . .
 
-# Install the package in editable mode.
+# Install Poetry package manager and install project dependencies
 RUN pip install poetry && poetry install
 
+# Switch to the non-root user to run the application
 USER appuser
