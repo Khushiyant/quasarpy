@@ -1,7 +1,7 @@
 '''This module contains the main() function, which is the entry point for the
 command line interface.'''
 from dotenv import load_dotenv
-from logging import ERROR, INFO, DEBUG
+from logging import INFO
 
 
 load_dotenv() # Load environment variables from .env file

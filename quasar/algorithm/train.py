@@ -1,7 +1,6 @@
 from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 import pickle
-from typing import Optional
 import os
 from quasar.utils.logger import logger
 import click

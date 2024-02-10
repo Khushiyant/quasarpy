@@ -1,5 +1,5 @@
 from xml.etree.ElementTree import Element, SubElement, tostring
-from typing import List, Callable, Optional, Any
+from typing import Any
 from abc import ABC, abstractmethod
 import json
 

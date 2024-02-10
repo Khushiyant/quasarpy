@@ -1,14 +1,10 @@
 import click
-from typing import List, Callable, Optional
-from quasar.utils.logger import logger
 from quasar.utils import JsonFormatter, XmlFormatter
-from quasar.utils import formatted_data
-from quasar.algorithm import detect_smell, MainDetector
-from quasar.handler import IssueHandler, Issue
+from quasar.algorithm import MainDetector
 
 from quasar import __version__
 from quasar.algorithm import train
-from quasar.types import ModelType, SmellType, FormatterType
+from quasar.types import ModelType, FormatterType
 from quasar.utils import ASCII_ART
 from quasar.utils import analyse
 

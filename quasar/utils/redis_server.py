@@ -1,7 +1,6 @@
 import redis
 import os
 from dataclasses import dataclass
-import timeit
 
 LOCALHOST = os.getenv('LOCALHOST', 'localhost')
 DB_PORT = os.getenv('DB_PORT', 6379)
