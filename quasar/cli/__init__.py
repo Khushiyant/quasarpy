@@ -1,6 +1,6 @@
 import click
-from quasar.utils import JsonFormatter, XmlFormatter
-from quasar.algorithm import MainDetector
+# from quasar.utils import JsonFormatter, XmlFormatter
+# from quasar.algorithm import MainDetector
 
 from quasar import __version__
 from quasar.algorithm import train
@@ -50,8 +50,8 @@ def detect(type, path, format) -> None:
     Returns:
         None
     """
-    detector = MainDetector()
-    formatter = JsonFormatter() if format == FormatterType.JSON.value else XmlFormatter()
+    # detector = MainDetector()
+    # formatter = JsonFormatter() if format == FormatterType.JSON.value else XmlFormatter()
 
     if path:
         click.echo(analyse(path, 'raw'))

@@ -10,7 +10,8 @@ __version__ = '0.1.0'
 
 
 def main():
-    from quasar.cli import logger, cli
+    from quasar.cli import cli
+    from quasar.utils import logger
 
     try:
         cli()

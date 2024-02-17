@@ -53,8 +53,10 @@ class MainDetector(Detector):
         model = self._get_model(model_type)
         model_path = os.path.join(self.dir_path, 'model/', f"{model}.pkl")
         class_model = pkl.load(open(model_path, 'rb'))
+
         data = process_data(data)
-        return self.class_model.predict(data)[0]
+        
+        return class_model.predict(data)[0]
 
 
 def detect_smell(data, detector: Detector, model_type: str) -> int:
