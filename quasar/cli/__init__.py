@@ -1,5 +1,4 @@
 import click
-# from quasar.utils import JsonFormatter, XmlFormatter
 # from quasar.algorithm import MainDetector
 
 from quasar import __version__
@@ -7,6 +6,8 @@ from quasar.algorithm import train
 from quasar.types import ModelType, FormatterType
 from quasar.utils import ASCII_ART
 from quasar.utils import analyse
+
+from radon.cli import log_result
 
 
 class ASCIICommandClass(click.Group):
@@ -50,13 +51,16 @@ def detect(type, path, format) -> None:
     Returns:
         None
     """
-    # detector = MainDetector()
-    # formatter = JsonFormatter() if format == FormatterType.JSON.value else XmlFormatter()
-
-    if path:
-        click.echo(analyse(path, 'raw'))
-    else:
-        raise click.BadParameter('Path is required')
+    
+    try:
+        harvester, cc_harvester, mi_harvester = analyse([path])
+        if path:
+            click.echo(log_result(harvester, json=True))
+        else:
+            raise click.BadParameter('Path is required')
+    except Exception as e:
+        raise e
+    
 
 
 if __name__ == '__main__':
