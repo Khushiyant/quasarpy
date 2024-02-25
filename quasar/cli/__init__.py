@@ -1,7 +1,7 @@
 import click
 # from quasar.algorithm import MainDetector
 
-from quasar import __version__
+from quasar._version import __version__ as _version
 from quasar.algorithm import train
 from quasar.types import ModelType, FormatterType
 from quasar.utils import ASCII_ART
@@ -16,7 +16,7 @@ class ASCIICommandClass(click.Group):
 
 
 @click.group(name='cli', cls=ASCIICommandClass)
-@click.version_option(__version__, prog_name='Quasar')
+@click.version_option(_version, prog_name='Quasar')
 @click.help_option('-h', '--help')
 def cli() -> None:
     pass
