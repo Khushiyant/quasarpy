@@ -1,6 +1,5 @@
 
 {
 	"name": "Quasar App",
-	"dockerFile": "../Dockerfile.dev",
-	"postCreateCommand": "pip install -e ."
+	"dockerFile": "../Dockerfile.dev"
 }
