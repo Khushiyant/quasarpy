@@ -2,8 +2,7 @@ import click
 # from quasar.algorithm import MainDetector
 
 from quasar._version import __version__ as _version
-from quasar.algorithm import train
-from quasar.types import ModelType, FormatterType
+from quasar.types import FormatterType
 from quasar.utils import ASCII_ART
 from quasar.utils import analyse
 
@@ -20,15 +19,6 @@ class ASCIICommandClass(click.Group):
 @click.help_option('-h', '--help')
 def cli() -> None:
     pass
-
-
-@cli.command(name='train', help='Train a random forest model')
-@click.option('--dataset', '-dt')
-@click.option('--output', '-o')
-@click.option('--type', '-t',
-              type=click.Choice([m.value for m in ModelType]))
-def train_model(type, dataset, output):
-    train(type, output, dataset)
 
 
 @cli.command(name='detect', help='Detect code smells')
@@ -51,7 +41,7 @@ def detect(type, path, format) -> None:
     Returns:
         None
     """
-    
+
     try:
         harvester, cc_harvester, mi_harvester = analyse([path])
         if path:
@@ -60,7 +50,6 @@ def detect(type, path, format) -> None:
             raise click.BadParameter('Path is required')
     except Exception as e:
         raise e
-    
 
 
 if __name__ == '__main__':
