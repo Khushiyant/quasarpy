@@ -22,6 +22,7 @@ ruff = "^0.2.1"
 termcolor = "^2.4.0"
 pandas = "^2.2.0"
 transformers = "^4.38.1"
+torch = "^2.2.1"
 
 
 [build-system]
