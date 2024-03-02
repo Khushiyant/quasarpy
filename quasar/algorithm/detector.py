@@ -1,7 +1,6 @@
 import pickle as pkl
 from abc import ABC, abstractmethod
 import os
-from quasar.types import ModelType
 from quasar.utils import process_radon_data as process_data
 from typing import Literal
 
@@ -34,9 +33,9 @@ class MainDetector(Detector):
         Returns:
             str: The model type ('class' or 'method').
         """
-        if model_type == ModelType.CLASS.value:
+        if model_type == "class":
             return 'class'
-        elif model_type == ModelType.METHOD.value:
+        elif model_type == "method":
             return 'method'
 
     def _detect(self, data, model_type):

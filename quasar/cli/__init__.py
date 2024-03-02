@@ -2,7 +2,6 @@ import click
 # from quasar.algorithm import MainDetector
 
 from quasar._version import __version__ as _version
-from quasar.types import FormatterType
 from quasar.utils import ASCII_ART
 from quasar.utils import analyse
 
@@ -22,11 +21,10 @@ def cli() -> None:
 
 
 @cli.command(name='detect', help='Detect code smells')
-@click.option('--type', '-tp')
 @click.option('--path', '-p')
 @click.option('--format', '-f',
-              type=click.Choice([t.value for t in FormatterType]))
-def detect(type, path, format) -> None:
+              type=click.Choice(['json', 'xml']))
+def detect(path, format) -> None:
     """
     Detects the specified type of object in the given path and formats the output.
 
@@ -45,7 +43,8 @@ def detect(type, path, format) -> None:
     try:
         harvester, cc_harvester, mi_harvester = analyse([path])
         if path:
-            click.echo(log_result(harvester, json=True))
+            click.echo(log_result(harvester, json=(
+                True if format == 'json' else False)))
         else:
             raise click.BadParameter('Path is required')
     except Exception as e:
