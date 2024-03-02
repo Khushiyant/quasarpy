@@ -6,12 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-import pathlib
-import sys
-
-sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
-
-project = 'quasar docs'
+project = 'quasar'
 copyright = '2024, Khushiyant'
 author = 'Khushiyant'
 release = '0.1.0'
@@ -19,10 +14,10 @@ release = '0.1.0'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon', 'sphinx.ext.viewcode']
+extensions = []
 
 templates_path = ['_templates']
-exclude_patterns = []
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 
 
