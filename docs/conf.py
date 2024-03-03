@@ -12,7 +12,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.napoleon', 'sphinx.ext.viewcode']
 
 templates_path = ['_templates']
-exclude_patterns = []
+exclude_patterns = ["tests"]
 
 
 html_theme = 'alabaster'
