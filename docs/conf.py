@@ -1,7 +1,7 @@
-import pathlib
+import os
 import sys
 
-sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
+sys.path.insert(0, os.path.abspath('..'))
 
 project = 'Quasar Docs'
 copyright = '2024, Khushiyant'
@@ -10,16 +10,13 @@ release = '0.1.0'
 
 
 extensions = [
-    'sphinx.ext.duration',
-    'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.intersphinx',
-    'autoapi.extension',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.viewcode',
 ]
 
 templates_path = ['_templates']
-exclude_patterns = []
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'tests']
 
 
 html_theme = 'alabaster'
