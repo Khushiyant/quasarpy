@@ -24,7 +24,8 @@ def cli() -> None:
 @click.option('--path', '-p')
 @click.option('--format', '-f',
               type=click.Choice(['json', 'xml']))
-def detect(path, format) -> None:
+@click.option('--solution', '-s', is_flag=True, help='Provide solutions for detected code smells')
+def detect(path, format, solution) -> None:
     """
     Detects the specified type of object in the given path and formats the output.
 
@@ -32,6 +33,7 @@ def detect(path, format) -> None:
         type (str): The type of object to detect.
         path (str): The path to the file or directory to be analyzed.
         format (str): The desired output format ('json' or 'xml').
+        solution (bool): Whether to provide solutions for the detected code smells.
 
     Raises:
         ValueError('Path is required'): If the path is not provided.
@@ -40,14 +42,17 @@ def detect(path, format) -> None:
         None
     """
 
-    try:
-        harvester, cc_harvester, mi_harvester = analyse([path])
-        if path:
-            click.echo(log_result(harvester, json=( format == 'json' ), xml=( format == 'xml')))
-        else:
-            raise ValueError('Path is required')
-    except Exception as e:
-        raise e
+    if solution:
+        raise NotImplementedError('Solution flag not implemented yet')
+    else:
+        try:
+            harvester, cc_harvester, mi_harvester = analyse([path])
+            if path:
+                click.echo(log_result(harvester, json=( format == 'json' ), xml=( format == 'xml')))
+            else:
+                raise ValueError('Path is required')
+        except Exception as e:
+            raise e
 
 
 if __name__ == '__main__':
