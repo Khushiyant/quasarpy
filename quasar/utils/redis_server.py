@@ -1,6 +1,7 @@
 import redis
 import os
 from dataclasses import dataclass
+from quasar.utils.logger import logger
 
 LOCALHOST = os.getenv('LOCALHOST', 'localhost')
 DB_PORT = os.getenv('DB_PORT', 6379)
@@ -12,6 +13,7 @@ r = redis.Redis(host=LOCALHOST, port=DB_PORT, db=DB)
 @dataclass
 class RedisServer:
     r = redis.Redis(host=LOCALHOST, port=DB_PORT, db=DB)
+    logger = logger
 
     def set_value(self, key, value):
         self.r.set(key, value)

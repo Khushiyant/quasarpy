@@ -34,7 +34,7 @@ def detect(path, format) -> None:
         format (str): The desired output format ('json' or 'xml').
 
     Raises:
-        click.BadParameter: If the path is not provided.
+        ValueError('Path is required'): If the path is not provided.
 
     Returns:
         None
@@ -43,10 +43,9 @@ def detect(path, format) -> None:
     try:
         harvester, cc_harvester, mi_harvester = analyse([path])
         if path:
-            click.echo(log_result(harvester, json=(
-                True if format == 'json' else False)))
+            click.echo(log_result(harvester, json=( format == 'json' ), xml=( format == 'xml')))
         else:
-            raise click.BadParameter('Path is required')
+            raise ValueError('Path is required')
     except Exception as e:
         raise e
 

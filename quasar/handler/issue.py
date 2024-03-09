@@ -39,10 +39,12 @@ class IssueHandler:
         _validate_token(auth) -> bool: Validates the authentication token.
         create_issue(issue) -> None: Creates an issue in the repository.
     """
-
+    logger = logger
+    
     def __init__(self, repo: str, token: str):
         self.repo = repo
         self.auth = Auth.Token(token)
+        self.logger.info('IssueHandler initialized.')
 
     def _validate_repo(self, repo) -> bool:
         """

@@ -3,9 +3,12 @@ from abc import ABC, abstractmethod
 import os
 from quasar.utils import process_radon_data as process_data
 from typing import Literal
-
+from quasar.utils.logger import logger
 
 class Detector(ABC):
+    logger = logger
+    def __init__(self):
+        self.logger.info('Detector class initialized.')
     @abstractmethod
     def _get_model(self, model_type) -> Literal['class', 'method']:
         ...
@@ -22,6 +25,11 @@ class MainDetector(Detector):
     """
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
+    logger = logger
+
+    def __init__(self):
+        super().__init__()
+        self.logger.info('MainDetector class initialized.')
 
     def _get_model(self, model_type) -> Literal['class', 'method']:
         """

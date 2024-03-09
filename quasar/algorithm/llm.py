@@ -1,7 +1,8 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
-
+from quasar.utils.logger import logger
 
 class LLM:
+    logger = logger
     def __init__(self, model_name: str = "google/gemma-2b") -> None:
         """
         Initializes an instance of the LLM class.
@@ -11,6 +12,7 @@ class LLM:
         """
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForCausalLM.from_pretrained(model_name)
+        self.logger.info('LLM class initialized.')
 
     def generate(self, input_text: str, max_length: int, **kwargs) -> str:
         """
