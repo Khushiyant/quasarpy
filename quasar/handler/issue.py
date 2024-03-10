@@ -3,9 +3,9 @@ from github import Github, Auth
 from dataclasses import dataclass
 
 from quasar.utils.logger import logger
-
-import click
-from typing import AnyStr, Optional, List
+from urllib3.exceptions import HTTPError 
+from typing import AnyStr, List
+import pydantic 
 
 
 @dataclass
@@ -20,8 +20,41 @@ class Issue:
     """
     title: AnyStr
     body: AnyStr
-    label: List[Optional[AnyStr]]
+    labels: List[AnyStr] = [
+        'improvement'
+    ]
 
+
+class Repository(pydantic.BaseModel):
+    """
+    Represents a repository on the github.
+
+    Attributes:
+        name (AnyStr): The name of the repository.
+        token (AnyStr): The authentication token.
+    """
+    name: AnyStr
+    token: AnyStr
+
+    @pydantic.validator('name')
+    def validate_name(cls, name):
+        if not isinstance(name, str):
+            raise ValueError('Name must be a string.')
+        try:
+            Github.get_repo(name)
+        except HTTPError:
+            raise HTTPError('Invalid repository.')
+        return name
+
+    @pydantic.validator('token')
+    def validate_token(cls, token):
+        if not isinstance(token, str):
+            raise ValueError('Token must be a string.')
+        try:
+            Github(auth=Auth.Token(token))
+        except HTTPError:
+            raise HTTPError('Invalid token.')
+        return token
 
 class IssueHandler:
     """
@@ -42,44 +75,9 @@ class IssueHandler:
     """
     logger = logger
     
-    def __init__(self, repo: str, token: str):
+    def __init__(self, repo: Repository):
         self.repo = repo
-        self.auth = Auth.Token(token)
         self.logger.info('IssueHandler initialized.')
-
-    def _validate_repo(self, repo: str) -> bool:
-        """
-        Validates the repository.
-
-        Args:
-            repo: The name of the repository.
-
-        Returns:
-            bool: True if the repository is valid, False otherwise.
-        """
-        try:
-            self.repo = self.github.get_repo(repo)
-            return True
-        except Exception as e:
-            logger.error(e)
-            return False
-
-    def _validate_token(self, auth: Auth.Token) -> bool:
-        """
-        Validates the authentication token.
-
-        Args:
-            auth (Auth.Token): The authentication token.
-
-        Returns:
-            bool: True if the token is valid, False otherwise.
-        """
-        try:
-            self.github = Github(auth=auth)
-            return True
-        except Exception as e:
-            logger.error(e)
-            return False
 
     def create_issue(self, issue: Issue) -> None:
         """
@@ -91,12 +89,6 @@ class IssueHandler:
         Raises:
             click.UsageError: If the token or repository is invalid.
         """
-        if not self._validate_token(self.auth):
-            logger.error('Invalid token.')
-            raise click.UsageError('Invalid token.')
 
-        if not self._validate_repo(self.repo):
-            logger.error('Invalid repository.')
-            raise click.UsageError('Invalid repository.')
-
-        self.repo.create_issue(**issue.__dict__)
+        repo = Github.get_repo(self.repo.name)
+        repo.create_issue(title=issue.title, body=issue.body, labels=issue.labels)

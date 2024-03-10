@@ -4,6 +4,8 @@ import click
 from quasar._version import __version__ as _version
 from quasar.utils import ASCII_ART
 from quasar.utils import analyse
+from ast import literal_eval
+from quasar.utils.errors import LiteralEvalError
 
 
 class ASCIICommandClass(click.Group):
@@ -47,7 +49,10 @@ def detect(path, format, solution) -> None:
             if path:
                 harvester, cc_harvester, mi_harvester = analyse([path])
                 if format == 'json':
-                    click.echo(harvester.as_json())
+                    try: 
+                        click.echo(literal_eval(harvester.as_json()))
+                    except LiteralEvalError:
+                        raise LiteralEvalError('Error during the evaluating an expression node')
                 else:
                     click.echo(harvester.as_xml())
             else:
