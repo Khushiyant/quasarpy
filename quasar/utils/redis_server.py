@@ -5,26 +5,22 @@ import pydantic
 
 
 class RedisConfig(pydantic.BaseModel):
+    model_config = pydantic.ConfigDict(env_file='.env', env_file_encoding='utf-8')
     host: str = os.getenv('LOCALHOST', 'localhost')
     port: int = os.getenv('DB_PORT', 6379)
     db: int = os.getenv('DB', 0)
 
-    @pydantic.validator('port')
+    @pydantic.field_validator('port')
     def check_port(cls, v):
         if v < 0 or v > 65535:
             raise ValueError('Port number must be between 0 and 65535')
         return v
 
-    @pydantic.validator('db')
+    @pydantic.field_validator('db')
     def check_db(cls, v):
         if v < 0 or v > 15:
             raise ValueError('Database number must be between 0 and 15')
         return v
-
-    class Config:
-        env_file = '.env'
-        env_file_encoding = 'utf-8'
-
 
 class RedisServer:
     logger = logger

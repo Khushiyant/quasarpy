@@ -3,7 +3,6 @@ from github import Github, Auth, GithubException
 from dataclasses import dataclass, field
 
 from quasar.utils.logger import logger
-from urllib3.exceptions import HTTPError 
 from typing import AnyStr, List
 import pydantic 
 
@@ -34,7 +33,7 @@ class Repository(pydantic.BaseModel):
     name: AnyStr
     token: AnyStr
 
-    @pydantic.root_validator(pre=True)
+    @pydantic.model_validator(mode='before')
     @classmethod
     def validate_name_and_token(cls, values):
         """

@@ -1,1 +1,1 @@
-from quasar.handler.issue import Issue, IssueHandler # noqa: F401
+from quasar.handler.issue import Issue, IssueHandler, Repository # noqa: F401
