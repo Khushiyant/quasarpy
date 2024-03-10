@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from quasar.utils.logger import logger
 
 import click
+from typing import AnyStr, Optional, List
 
 
 @dataclass
@@ -13,13 +14,13 @@ class Issue:
     Represents an issue in the Quasar project.
 
     Attributes:
-        title (str): The title of the issue.
-        body (str): The body/content of the issue.
-        label (str, optional): The label assigned to the issue. Defaults to 'improvement'.
+        title (AnyStr): The title of the issue.
+        body (AnyStr): The body/content of the issue.
+        label (AnyStr, optional): The label assigned to the issue.
     """
-    title: str
-    body: str
-    label: str = 'improvement'
+    title: AnyStr
+    body: AnyStr
+    label: List[Optional[AnyStr]]
 
 
 class IssueHandler:
@@ -46,7 +47,7 @@ class IssueHandler:
         self.auth = Auth.Token(token)
         self.logger.info('IssueHandler initialized.')
 
-    def _validate_repo(self, repo) -> bool:
+    def _validate_repo(self, repo: str) -> bool:
         """
         Validates the repository.
 
@@ -98,5 +99,4 @@ class IssueHandler:
             logger.error('Invalid repository.')
             raise click.UsageError('Invalid repository.')
 
-        self.repo.create_issue(title=issue.title, body=issue.body,
-                               labels=[issue.label])
+        self.repo.create_issue(**issue.__dict__)

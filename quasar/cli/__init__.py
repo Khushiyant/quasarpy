@@ -5,8 +5,6 @@ from quasar._version import __version__ as _version
 from quasar.utils import ASCII_ART
 from quasar.utils import analyse
 
-from radon.cli import log_result
-
 
 class ASCIICommandClass(click.Group):
     def get_help(self, ctx):
@@ -46,9 +44,12 @@ def detect(path, format, solution) -> None:
         raise NotImplementedError('Solution flag not implemented yet')
     else:
         try:
-            harvester, cc_harvester, mi_harvester = analyse([path])
             if path:
-                click.echo(log_result(harvester, json=( format == 'json' ), xml=( format == 'xml')))
+                harvester, cc_harvester, mi_harvester = analyse([path])
+                if format == 'json':
+                    click.echo(harvester.as_json())
+                else:
+                    click.echo(harvester.as_xml())
             else:
                 raise ValueError('Path is required')
         except Exception as e:

@@ -1,10 +1,12 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from quasar.utils.logger import logger
-from pydantic import BaseModel
+from dataclasses import dataclass
 
-class LLMConfig(BaseModel):
+@dataclass
+class LLMConfig:
     model_name: str = "google/gemma-2b"
     max_length: int = 100
+
 
 
 class LLM:
