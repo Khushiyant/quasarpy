@@ -1,6 +1,6 @@
-from github import Github, Auth
+from github import Github, Auth, GithubException
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from quasar.utils.logger import logger
 from urllib3.exceptions import HTTPError 
@@ -16,13 +16,11 @@ class Issue:
     Attributes:
         title (AnyStr): The title of the issue.
         body (AnyStr): The body/content of the issue.
-        label (AnyStr, optional): The label assigned to the issue.
+        label (AnyStr, optional): The label assigned to the issue. Defaults to 'improvement'.
     """
     title: AnyStr
     body: AnyStr
-    labels: List[AnyStr] = [
-        'improvement'
-    ]
+    labels: List[AnyStr] = field(default_factory=lambda: ['improvement'])
 
 
 class Repository(pydantic.BaseModel):
@@ -36,46 +34,46 @@ class Repository(pydantic.BaseModel):
     name: AnyStr
     token: AnyStr
 
-    @pydantic.validator('name')
-    def validate_name(cls, name):
-        if not isinstance(name, str):
-            raise ValueError('Name must be a string.')
-        try:
-            Github.get_repo(name)
-        except HTTPError:
-            raise HTTPError('Invalid repository.')
-        return name
+    @pydantic.root_validator(pre=True)
+    @classmethod
+    def validate_name_and_token(cls, values):
+        """
+        Validates the name and token of the repository.
 
-    @pydantic.validator('token')
-    def validate_token(cls, token):
-        if not isinstance(token, str):
-            raise ValueError('Token must be a string.')
+        Args:
+            values (dict): The dictionary containing the name and token of the repository.
+
+        Raises:
+            ValueError: If the name or token is invalid.
+
+        Returns:
+            dict: The dictionary containing the name and token of the repository.
+        """
+        if not values.get('name'):
+            raise ValueError('Repository name is required')
+        if not values.get('token'):
+            raise ValueError('Token is required')
+        
         try:
-            Github(auth=Auth.Token(token))
-        except HTTPError:
-            raise HTTPError('Invalid token.')
-        return token
+            Github(auth=Auth.Token(values.get('token'))).get_repo(values.get('name'))
+        except GithubException:
+            raise GithubException('Invalid token or repository')
+
+        return values
 
 class IssueHandler:
-    """
-    A class that handles issue creation for a given repository.
-
-    Args:
-        repo (str): The name of the repository.
-        token (str): The authentication token.
-
-    Attributes:
-        repo (str): The name of the repository.
-        auth (Auth.Token): The authentication token.
-
-    Methods:
-        _validate_repo(repo) -> bool: Validates the repository.
-        _validate_token(auth) -> bool: Validates the authentication token.
-        create_issue(issue) -> None: Creates an issue in the repository.
-    """
     logger = logger
     
     def __init__(self, repo: Repository):
+        """
+        Initializes the IssueHandler object.
+
+        Args:
+            repo (Repository): The repository object.
+
+        Returns:
+            None
+        """
         self.repo = repo
         self.logger.info('IssueHandler initialized.')
 
@@ -88,7 +86,10 @@ class IssueHandler:
 
         Raises:
             click.UsageError: If the token or repository is invalid.
-        """
 
+        Returns:
+            None
+        """
         repo = Github.get_repo(self.repo.name)
         repo.create_issue(title=issue.title, body=issue.body, labels=issue.labels)
+        self.logger.info('Issue successfully created.')
