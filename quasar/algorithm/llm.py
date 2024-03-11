@@ -5,7 +5,7 @@ from dataclasses import dataclass
 @dataclass
 class LLMConfig:
     model_name: str = "google/gemma-2b"
-    max_length: int = 100
+    max_new_tokens: int = 100
 
 
 
@@ -38,6 +38,6 @@ class LLM:
             str: The generated text.
         """
         input_ids = self.tokenizer(
-            input_text, return_tensors="pt", max_length=self.model_config.max_length, kwargs=kwargs)
+            input_text, return_tensors="pt", max_new_tokens=self.model_config.max_new_tokens, **kwargs)
         outputs = self.model.generate(**input_ids)
         return self.tokenizer.decode(outputs[0])
