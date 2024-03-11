@@ -4,7 +4,7 @@ from radon.cli.harvest import (
 from radon.cli import Config
 
 
-def analyse(path:list, exclude=None, ignore=None, show_closures=False, no_assert=False, order='SCORE', **kwargs):
+def analyse(paths: list, exclude=None, ignore=None, show_closures=False, no_assert=False, order='SCORE', **kwargs):
     """
     Analyzes the given path using different harvesters and returns the results.
 
@@ -32,8 +32,8 @@ def analyse(path:list, exclude=None, ignore=None, show_closures=False, no_assert
         order=order,
         **kwargs
     )
-    raw = RawHarvester(path, config)
-    cc = CCHarvester(path, config)
-    mi = MIHarvester(path, config)
+    raw = RawHarvester(paths, config)
+    cc = CCHarvester(paths, config)
+    mi = MIHarvester(paths, config)
   
     return raw, cc, mi
