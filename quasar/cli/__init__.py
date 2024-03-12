@@ -4,8 +4,7 @@ import click
 from quasar._version import __version__ as _version
 from quasar.utils import ASCII_ART
 from quasar.utils import analyse
-from ast import literal_eval
-from quasar.utils.errors import LiteralEvalError
+from quasar.algorithm.detector import MainDetector, detect_smell
 
 
 class ASCIICommandClass(click.Group):
@@ -23,7 +22,7 @@ def cli() -> None:
 @cli.command(name='detect', help='Detect code smells')
 @click.option('--path', '-p')
 @click.option('--format', '-f',
-              type=click.Choice(['json', 'xml']))
+              type=click.Choice(['json']))
 @click.option('--solution', '-s', is_flag=True, help='Provide solutions for detected code smells')
 def detect(path, format, solution) -> None:
     """
@@ -47,14 +46,18 @@ def detect(path, format, solution) -> None:
     else:
         try:
             if path:
-                harvester, cc_harvester, mi_harvester = analyse([path])
+                data_json = analyse([path])
                 if format == 'json':
-                    try: 
-                        click.echo(literal_eval(harvester.as_json()))
-                    except LiteralEvalError:
-                        raise LiteralEvalError('Error during the evaluating an expression node')
+                    # Here we are using the detect_smell function to detect the smell in the combined_json
+                    try:
+                        detector = MainDetector()
+                        print(detect_smell(data_json, detector))
+                    except Exception as e:
+                        raise e
+                    click.echo(data_json)
+
                 else:
-                    click.echo(harvester.as_xml())
+                    NotImplementedError('Other format not implemented yet')
             else:
                 raise ValueError('Path is required')
         except Exception as e:

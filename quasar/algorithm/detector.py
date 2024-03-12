@@ -1,20 +1,18 @@
 import pickle as pkl
 from abc import ABC, abstractmethod
 import os
-from quasar.utils import process_radon_data as process_data
-from typing import Literal
+from typing import Dict
 from quasar.utils.logger import logger
 
 class Detector(ABC):
     logger = logger
+
     def __init__(self):
         self.logger.info('Detector class initialized.')
-    @abstractmethod
-    def _get_model(self, model_type) -> Literal['class', 'method']:
-        ...
+
 
     @abstractmethod
-    def _detect(self, data, ModelType):
+    def _detect(self, data) -> Dict[int, int]:
         ...
 
 
@@ -31,52 +29,49 @@ class MainDetector(Detector):
         super().__init__()
         self.logger.info('MainDetector class initialized.')
 
-    def _get_model(self, model_type) -> Literal['class', 'method']:
-        """
-        Get the model type based on the provided model_type parameter.
-
-        Args:
-            model_type (str): The type of model to retrieve.
-
-        Returns:
-            str: The model type ('class' or 'method').
-        """
-        if model_type == "class":
-            return 'class'
-        elif model_type == "method":
-            return 'method'
-
-    def _detect(self, data, model_type):
+    def _detect(self, data) -> Dict[str, str]:
         """
         Detect the type of data based on the provided data and model type.
 
         Args:
             data: The data to be processed and classified.
-            model_type (str): The type of model to use for classification.
 
         Returns:
-            str: The predicted class of the data.
+            dict(int, int): The predicted classes of the data.
         """
-        model = self._get_model(model_type)
-        model_path = os.path.join(self.dir_path, 'model/', f"{model}.pkl")
-        class_model = pkl.load(open(model_path, 'rb'))
+        logger.info("Detecting smell")
 
-        data = process_data(data)
+        model_dir = os.path.join(self.dir_path, 'model')
         
-        return class_model.predict(data)[0]
+        class_model_path = os.path.join(model_dir, "class_model.sav")
+        function_model_path = os.path.join(model_dir, "method_model.sav")
+
+        try:
+            class_model = pkl.load(open(class_model_path, 'rb'))
+            function_model = pkl.load(open(function_model_path, 'rb'))
+
+        except FileNotFoundError:
+            self.logger.error("Model not found.")
+            raise FileNotFoundError("Model not found.")
+
+        for _, value in data.items():
+            value_list = list(value.values())
+            value['long_class'] = class_model.predict(value_list)[0]
+            value['long_method'] = function_model.predict(value_list)[0]
+        
+        return data
 
 
-def detect_smell(data, detector: Detector, model_type: str) -> int:
+def detect_smell(data:dict, detector: Detector) -> Dict[str, str]:
     """
     Detects smell in the given data using the specified detector and model type.
 
     Args:
         data: The data to be analyzed for smell detection.
         detector: The detector object used for smell detection.
-        model_type: The type of model used for smell detection.
 
     Returns:
-        The result of smell detection (int).
+        The result of smell detection (dict(int, int))
 
     """
-    return detector._detect(data, model_type)
+    return detector._detect(data)

@@ -15,7 +15,7 @@ class Issue:
     Attributes:
         title (AnyStr): The title of the issue.
         body (AnyStr): The body/content of the issue.
-        label (AnyStr, optional): The label assigned to the issue. Defaults to 'improvement'.
+        labels (List[AnyStr]): The labels assigned to the issue. Defaults to ['improvement'].
     """
     title: AnyStr
     body: AnyStr
