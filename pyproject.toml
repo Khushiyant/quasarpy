@@ -10,13 +10,11 @@ readme = "README.md"
 python = "^3.10"
 sphinx = "^7.2.6"
 click = "^8.1.7"
-numpy = "^1.26.3"
 pytest = "^8.0.0"
 python-dotenv = "^1.0.1"
 radon = "^6.0.1"
 redis = "^5.0.1"
 requests = "^2.31.0"
-scikit-learn = "^1.4.0"
 pygithub = "^2.2.0"
 ruff = "^0.2.1"
 termcolor = "^2.4.0"
@@ -25,6 +23,9 @@ transformers = "^4.38.1"
 torch = "^2.2.1"
 pydantic = "^2.6.3"
 
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.3"
 
 [build-system]
 requires = ["poetry-core"]
