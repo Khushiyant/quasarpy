@@ -51,11 +51,9 @@ def detect(path, format, solution) -> None:
                     # Here we are using the detect_smell function to detect the smell in the combined_json
                     try:
                         detector = MainDetector()
-                        print(detect_smell(data_json, detector))
+                        click.echo(detect_smell(data_json, detector))
                     except Exception as e:
                         raise e
-                    click.echo(data_json)
-
                 else:
                     NotImplementedError('Other format not implemented yet')
             else:

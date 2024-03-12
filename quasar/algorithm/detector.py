@@ -1,8 +1,8 @@
-import pickle as pkl
 from abc import ABC, abstractmethod
 import os
 from typing import Dict
 from quasar.utils.logger import logger
+import xgboost as xgb
 
 class Detector(ABC):
     logger = logger
@@ -43,12 +43,15 @@ class MainDetector(Detector):
 
         model_dir = os.path.join(self.dir_path, 'model')
         
-        class_model_path = os.path.join(model_dir, "class_model.sav")
-        function_model_path = os.path.join(model_dir, "method_model.sav")
+        class_model_path = os.path.join(model_dir, "class_model.json")
+        function_model_path = os.path.join(model_dir, "method_model.json")
 
         try:
-            class_model = pkl.load(open(class_model_path, 'rb'))
-            function_model = pkl.load(open(function_model_path, 'rb'))
+            class_model = xgb.XGBClassifier()
+            class_model.load_model(class_model_path)
+
+            function_model = xgb.XGBClassifier()
+            function_model.load_model(function_model_path)
 
         except FileNotFoundError:
             self.logger.error("Model not found.")
@@ -56,8 +59,8 @@ class MainDetector(Detector):
 
         for _, value in data.items():
             value_list = list(value.values())
-            value['long_class'] = class_model.predict(value_list)[0]
-            value['long_method'] = function_model.predict(value_list)[0]
+            value['long_class'] = class_model.predict([value_list])[0]
+            value['long_method'] = function_model.predict([value_list])[0]
         
         return data
 
