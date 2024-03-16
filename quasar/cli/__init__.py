@@ -5,7 +5,7 @@ from quasar._version import __version__ as _version
 from quasar.utils import ASCII_ART
 from quasar.utils import analyse
 from quasar.algorithm.detector import MainDetector, detect_smell
-
+from quasar.handler.issue import IssueHandler, Repository
 
 class ASCIICommandClass(click.Group):
     def get_help(self, ctx):
@@ -21,10 +21,11 @@ def cli() -> None:
 
 @cli.command(name='detect', help='Detect code smells')
 @click.option('--path', '-p')
+@click.option('--create-issue', '-c', is_flag=True, help='Create an issue if a smell is detected')
 @click.option('--format', '-f',
               type=click.Choice(['json']))
 @click.option('--solution', '-s', is_flag=True, help='Provide solutions for detected code smells')
-def detect(path, format, solution) -> None:
+def detect(path, format, solution, create_issue) -> None:
     """
     Detects the specified type of object in the given path and formats the output.
 
@@ -40,7 +41,8 @@ def detect(path, format, solution) -> None:
     Returns:
         None
     """
-
+    issue_handler = IssueHandler(repo=Repository()) if create_issue else None
+    
     if solution:
         raise NotImplementedError('Solution flag not implemented yet')
     else:
@@ -48,9 +50,8 @@ def detect(path, format, solution) -> None:
             if path:
                 data_json = analyse([path])
                 if format == 'json':
-                    # Here we are using the detect_smell function to detect the smell in the combined_json
                     try:
-                        detector = MainDetector()
+                        detector = MainDetector(issue_handler=issue_handler)
                         click.echo(detect_smell(data_json, detector))
                     except Exception as e:
                         raise e
