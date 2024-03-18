@@ -1,11 +1,13 @@
 import redis
 import os
+from typing import Dict, Any, AnyStr
 from quasar.utils.logger import logger
 import pydantic
 
 
 class RedisConfig(pydantic.BaseModel):
-    model_config = pydantic.ConfigDict(env_file='.env', env_file_encoding='utf-8')
+    model_config = pydantic.ConfigDict(
+        env_file='.env', env_file_encoding='utf-8')
     host: str = os.getenv('LOCALHOST', 'localhost')
     port: int = os.getenv('DB_PORT', 6379)
     db: int = os.getenv('DB', 0)
@@ -22,13 +24,14 @@ class RedisConfig(pydantic.BaseModel):
             raise ValueError('Database number must be between 0 and 15')
         return v
 
+
 class RedisServer:
     logger = logger
 
-    def __init__(self):
+    def __init__(self, config: RedisConfig):
         self.logger.info('RedisServer initialized.')
         try:
-            self.config = RedisConfig()
+            self.config = config
         except pydantic.ValidationError as e:
             self.logger.error(e)
             raise e
@@ -48,6 +51,11 @@ class RedisServer:
         return self.server.keys()
 
 
+def generate_report(config: RedisConfig, format: str) -> Dict[str, Any] | AnyStr:
+    logger.info('Generating report...')
+    server = RedisServer(config)
+    return server.get_all_keys()
+
+
 if __name__ == '__main__':
-    server = RedisServer()
-    print(server.server)
+    print(generate_report(RedisConfig(), 'json'))

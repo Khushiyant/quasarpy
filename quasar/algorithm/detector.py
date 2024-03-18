@@ -4,6 +4,7 @@ from typing import Dict
 from quasar.utils.logger import logger
 import xgboost as xgb
 from quasar.handler.issue import Issue, IssueHandler
+from quasar.utils.redis_server import RedisConfig, RedisServer
 
 
 class Detector(ABC):
@@ -78,10 +79,15 @@ class MainDetector(Detector):
             self.logger.error("Model not found.")
             raise FileNotFoundError("Model not found.")
 
-        for _, value in data.items():
+        config = RedisConfig()
+        server = RedisServer(config)
+
+        for key, value in data.items():
             value_list = list(value.values())
             value['long_class'] = class_model.predict([value_list])[0]
             value['long_method'] = function_model.predict([value_list])[0]
+
+            server.set(key, value)
 
             if self.issue_handler is not None:
                 self._create_issue_if_smell_detected(value)

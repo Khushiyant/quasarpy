@@ -1,11 +1,13 @@
 import click
-# from quasar.algorithm import MainDetector
-
+import os
+from datetime import datetime
 from quasar._version import __version__ as _version
 from quasar.utils import ASCII_ART
 from quasar.utils import analyse
 from quasar.algorithm.detector import MainDetector, detect_smell
 from quasar.handler.issue import IssueHandler, Repository
+from quasar.utils.redis_server import generate_report, RedisConfig
+
 
 class ASCIICommandClass(click.Group):
     def get_help(self, ctx):
@@ -17,6 +19,33 @@ class ASCIICommandClass(click.Group):
 @click.help_option('-h', '--help')
 def cli() -> None:
     pass
+
+
+@cli.command(name='report', help='Generate a report')
+@click.option('--format', '-f',
+              type=click.Choice(['json', 'txt']))
+@click.option('--output', '-o', type=click.Path(exists=False), help='Output file path')
+def report(format, output) -> None:
+    """
+    Generates a report of the detected code smells.
+
+    Args:
+        regenerate (bool): Whether to regenerate the report.
+
+    Returns:
+        None
+    """
+    config = RedisConfig()
+
+    if not format:
+        raise ValueError('Format is required')
+    report_name = f'report_{datetime.now().strftime("%H%M%S")}.{format}'
+    report_path = click.format_filename(os.path.join(output, report_name))
+    with open(report_path, 'w') as f:
+        data = generate_report(config=config, format=format)
+        if not data:
+            raise ValueError('No data to write')
+        f.write(data)
 
 
 @cli.command(name='detect', help='Detect code smells')
@@ -42,7 +71,7 @@ def detect(path, format, solution, create_issue) -> None:
         None
     """
     issue_handler = IssueHandler(repo=Repository()) if create_issue else None
-    
+
     if solution:
         raise NotImplementedError('Solution flag not implemented yet')
     else:
