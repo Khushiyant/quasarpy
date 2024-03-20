@@ -87,7 +87,7 @@ class MainDetector(Detector):
             value['long_class'] = class_model.predict([value_list])[0]
             value['long_method'] = function_model.predict([value_list])[0]
 
-            server.set(key, value)
+            # server.set(key, value)
 
             if self.issue_handler is not None:
                 self._create_issue_if_smell_detected(value)
