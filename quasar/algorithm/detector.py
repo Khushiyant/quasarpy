@@ -87,7 +87,11 @@ class MainDetector(Detector):
             value['long_class'] = class_model.predict([value_list])[0]
             value['long_method'] = function_model.predict([value_list])[0]
 
-            # server.set(key, value)
+            try:
+                # Save the value in the Redis server
+                server.set_value(key, value)
+            except Exception as e:
+                self.logger.error(e)
 
             if self.issue_handler is not None:
                 self._create_issue_if_smell_detected(value)
