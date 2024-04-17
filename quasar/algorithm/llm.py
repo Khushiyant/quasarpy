@@ -25,12 +25,12 @@ class LLM:
             model_config.model_name)
         self.logger.info('LLM class initialized.')
 
-    def generate(self, input_text: str, **kwargs) -> str:
+    def _generate(self, prompt: str, **kwargs) -> str:
         """
         Generates text based on the given input text.
 
         Args:
-            input_text (str): The input text to generate text from.
+            prompt (str): The input text to generate text from.
             max_length (int): The maximum length of the generated text.
             **kwargs: Additional keyword arguments to be passed to the model.generate() method.
 
@@ -38,6 +38,6 @@ class LLM:
             str: The generated text.
         """
         input_ids = self.tokenizer(
-            input_text, return_tensors="pt", max_new_tokens=self.model_config.max_new_tokens, **kwargs)
+            prompt, return_tensors="pt", max_new_tokens=self.model_config.max_new_tokens, **kwargs)
         outputs = self.model.generate(**input_ids)
         return self.tokenizer.decode(outputs[0])

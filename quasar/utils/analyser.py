@@ -41,6 +41,6 @@ def analyse(paths: list, exclude: str = None, ignore=None, show_closures=False, 
         raise LiteralEvalError("Unable to evaluate the literal string")
 
     combined_json = {key: {
-        **value, **h_visit(open(key).read()).total._asdict()} for key, value in raw_json.items()}
+        **value, **{k: round(v, 2) if isinstance(v, float) else v for k, v in h_visit(open(key).read()).total._asdict().items()}} for key, value in raw_json.items()}
 
     return combined_json

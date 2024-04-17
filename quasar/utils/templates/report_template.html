@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>Report</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            padding: 5px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Coding Standard Report</h1>
+    <p>Generation on: {{ time_now }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>File Path</th>
+                <th>LOC</th>
+                <th>LLOC</th>
+                <th>SLOC</th>
+                <th>Comments</th>
+                <th>Multi</th>
+                <th>Blank</th>
+                <th>Single Comments</th>
+                <th>H1</th>
+                <th>H2</th>
+                <th>N1</th>
+                <th>N2</th>
+                <th>Vocabulary</th>
+                <th>Length</th>
+                <th>Calculated Length</th>
+                <th>Volume</th>
+                <th>Difficulty</th>
+                <th>Effort</th>
+                <th>Time</th>
+                <th>Bugs</th>
+                <th>Long Class</th>
+                <th>Long Method</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr>
+                <td>{{ file }}</td>
+                <td>{{ files[file].loc }}</td>
+                <td>{{ files[file].lloc }}</td>
+                <td>{{ files[file].sloc }}</td>
+                <td>{{ files[file].comments }}</td>
+                <td>{{ files[file].multi }}</td>
+                <td>{{ files[file].blank }}</td>
+                <td>{{ files[file].single_comments }}</td>
+                <td>{{ files[file].h1 }}</td>
+                <td>{{ files[file].h2 }}</td>
+                <td>{{ files[file].N1 }}</td>
+                <td>{{ files[file].N2 }}</td>
+                <td>{{ files[file].vocabulary }}</td>
+                <td>{{ files[file].length }}</td>
+                <td>{{ files[file].calculated_length }}</td>
+                <td>{{ files[file].volume }}</td>
+                <td>{{ files[file].difficulty }}</td>
+                <td>{{ files[file].effort }}</td>
+                <td>{{ files[file].time }}</td>
+                <td>{{ files[file].bugs }}</td>
+                <td>{{ files[file].long_class }}</td>
+                <td>{{ files[file].long_method }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+</html>

@@ -23,7 +23,7 @@ def cli() -> None:
 
 @cli.command(name='report', help='Generate a report')
 @click.option('--format', '-f',
-              type=click.Choice(['json', 'txt']))
+              type=click.Choice(['json', 'pdf']))
 @click.option('--output', '-o', type=click.Path(exists=False), help='Output file path')
 def report(format, output) -> None:
     """
@@ -39,8 +39,7 @@ def report(format, output) -> None:
 
     if not format:
         raise ValueError('Format is required')
-    report_name = f'report_{datetime.now().strftime("%H%M%S")}.{format}'
-    report_path = click.format_filename(os.path.join(output, report_name))
+    report_path = click.format_filename(os.path.join(output, f'report_{datetime.now().strftime("%H%M%S")}.{format}'))
     with open(report_path, 'w') as f:
         data = generate_report(config=config, format=format)
         if not data:

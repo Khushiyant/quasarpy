@@ -1,8 +1,10 @@
 import redis
 import os
-from typing import Dict, Any, AnyStr
 from quasar.utils.logger import logger
 import pydantic
+import datetime
+from jinja2 import Environment, FileSystemLoader
+from xhtml2pdf import pisa
 
 
 class RedisConfig(pydantic.BaseModel):
@@ -108,7 +110,12 @@ class RedisServer:
         return self.server.keys()
 
 
-def generate_report(config: RedisConfig, format: str) -> Dict[str, Any] | AnyStr:
+def generate_report(config: RedisConfig, format: str, data: dict | str) -> any:
+    def convert_html_to_pdf(source_html, output_filename):
+        result_file = open(output_filename, "w+b")
+        pisa_status = pisa.CreatePDF(source_html, dest=result_file)
+        result_file.close()
+        return pisa_status.err
     """
     Generates a report of all keys in the Redis server.
 
@@ -121,10 +128,26 @@ def generate_report(config: RedisConfig, format: str) -> Dict[str, Any] | AnyStr
         depending on the specified format.
 
     """
-    logger.info('Generating report...')
-    server = RedisServer(config)
-    return server.get_all_keys()
 
+    logger.info('Generating report')
 
-if __name__ == '__main__':
-    print(generate_report(RedisConfig(), 'json'))
+    env = Environment(loader=FileSystemLoader('quasar/utils/templates'))
+    template = env.get_template('report_template.html')
+
+    html = template.render(time_now=datetime.datetime.now(), files=data)
+    with open('report.html', 'w') as f:
+        f.write(html)
+
+    if format == 'pdf':
+        if not convert_html_to_pdf(html, 'report.pdf'):
+            logger.info('PDF report generated successfully.')
+
+        if os.path.exists('report.html'):
+            os.remove('report.html')
+            logger.info('HTML report deleted successfully.')
+        else:
+            logger.error('HTML report not found.')
+
+    logger.info('Report generated successfully.')
+
+    return html
