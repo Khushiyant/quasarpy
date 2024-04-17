@@ -1411,18 +1411,6 @@ qa = ["flake8 (==3.8.3)", "mypy (==0.782)"]
 testing = ["docopt", "pytest (<6.0.0)"]
 
 [[package]]
-name = "pdfkit"
-version = "1.0.0"
-description = "Wkhtmltopdf python wrapper to convert html to pdf using the webkit rendering engine and qt"
-optional = false
-python-versions = "*"
-files = [
-    {file = "pdfkit-1.0.0-py2-none-any.whl", hash = "sha256:cc122e5aed594198ff7aaa566f2950d2163763576ab891c161bb1f6c630f5a8e"},
-    {file = "pdfkit-1.0.0-py3-none-any.whl", hash = "sha256:a7a4ca0d978e44fa8310c4909f087052430a6e8e0b1dd7ceef657f139789f96f"},
-    {file = "pdfkit-1.0.0.tar.gz", hash = "sha256:992f821e1e18fc8a0e701ecae24b51a2d598296a180caee0a24c0af181da02a9"},
-]
-
-[[package]]
 name = "pexpect"
 version = "4.9.0"
 description = "Pexpect allows easy control of interactive console applications."
@@ -3428,4 +3416,4 @@ test = ["coverage (>=5.3)", "tomli (>=2.0.1)", "tox"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "21b6b7b68a1a26105bb5910187d5d4cadf17c256f9772f37c5de52bddd25a4eb"
+content-hash = "aca516ad3132e4f39fd6f254fbadcfc4221fd81ac58e015801094c9ff7376d63"
