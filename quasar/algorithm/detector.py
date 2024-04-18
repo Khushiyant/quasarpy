@@ -5,7 +5,7 @@ from quasar.utils.logger import logger
 import xgboost as xgb
 from quasar.handler.issue import Issue, IssueHandler
 from quasar.utils.redis_server import RedisConfig, RedisServer
-
+import json
 
 class Detector(ABC):
     logger = logger
@@ -81,11 +81,12 @@ class MainDetector(Detector):
 
         config = RedisConfig()
         server = RedisServer(config)
-
+        
+        # data = json.loads(data)
         for key, value in data.items():
             value_list = list(value.values())
-            value['long_class'] = class_model.predict([value_list])[0]
-            value['long_method'] = function_model.predict([value_list])[0]
+            value["long_class"] = class_model.predict([value_list])[0]
+            value["long_method"] = function_model.predict([value_list])[0]
 
             try:
                 # Save the value in the Redis server

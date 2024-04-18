@@ -1,12 +1,11 @@
 from radon.cli.harvest import RawHarvester
-from ast import literal_eval
-from typing import Dict, Any
 from radon.cli import Config
 from radon.metrics import h_visit
 from quasar.utils.errors import LiteralEvalError
+import json
 
 
-def analyse(paths: list, exclude: str = None, ignore=None, show_closures=False, no_assert=False, order='SCORE', **kwargs) -> Dict[str, Any]:
+def analyse(paths: list, exclude: str = None, ignore=None, show_closures=False, no_assert=False, order='SCORE', **kwargs) -> str:
     """
     Analyzes the given path using different harvesters and returns the results.
 
@@ -35,10 +34,11 @@ def analyse(paths: list, exclude: str = None, ignore=None, show_closures=False, 
 
     raw = RawHarvester(paths, config)
 
+   
     try:
-        raw_json = literal_eval(raw.as_json())
-    except LiteralEvalError:
-        raise LiteralEvalError("Unable to evaluate the literal string")
+        raw_json = json.loads(raw.as_json())
+    except json.JSONDecodeError:
+        raise LiteralEvalError("Error decoding JSON")
 
     combined_json = {key: {
         **value, **{k: round(v, 2) if isinstance(v, float) else v for k, v in h_visit(open(key).read()).total._asdict().items()}} for key, value in raw_json.items()}

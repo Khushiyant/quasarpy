@@ -110,7 +110,7 @@ class RedisServer:
         return self.server.keys()
 
 
-def generate_report(config: RedisConfig, format: str, data: dict | str) -> any:
+def generate_report(config: RedisConfig, format: str, data: dict | str) -> None:
     def convert_html_to_pdf(source_html, output_filename):
         result_file = open(output_filename, "w+b")
         pisa_status = pisa.CreatePDF(source_html, dest=result_file)
@@ -149,5 +149,3 @@ def generate_report(config: RedisConfig, format: str, data: dict | str) -> any:
             logger.error('HTML report not found.')
 
     logger.info('Report generated successfully.')
-
-    return html

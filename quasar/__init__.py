@@ -13,7 +13,14 @@ load_dotenv()  # Load environment variables from .env file
 def main():
     '''Entry point for the command line interface.'''
     logger.info(f"Quasar {_version} started")
-    cli()
+    try: 
+        cli()
+    except NotImplementedError as e:
+        logger.error(e)
+    except ValueError as e:
+        logger.error(e)
+    finally:
+        logger.info(f"Quasar {__version__} stopped")
     
 
 if __name__ == "__main__":
