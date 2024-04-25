@@ -5,13 +5,14 @@ from quasar.utils.logger import logger
 import xgboost as xgb
 from quasar.handler.issue import Issue, IssueHandler
 from quasar.utils.redis_server import RedisConfig, RedisServer
-import json
+import asyncio
+
 
 class Detector(ABC):
     logger = logger
 
     def __init__(self):
-        self.logger.info('Detector class initialized.')
+        self.logger.info("Detector class initialized.")
 
     @abstractmethod
     def _detect(self, data) -> Dict[int, int]:
@@ -30,9 +31,9 @@ class MainDetector(Detector):
     def __init__(self, issue_handler: IssueHandler | None) -> None:
         super().__init__()
         self.issue_handler = issue_handler
-        self.logger.info('MainDetector class initialized.')
+        self.logger.info("MainDetector class initialized.")
 
-    def _create_issue_if_smell_detected(self, value):
+    async def _create_issue_if_smell_detected(self, value):
         """
         Creates an issue if a smell is detected based on the given value.
 
@@ -42,16 +43,16 @@ class MainDetector(Detector):
         Returns:
             None
         """
-        if value['long_class'] == 1:
-            issue = Issue('Long Class Smell Detected',
-                          body='Long Class Smell Detected')
-            self.issue_handler.create_issue(issue)
-        if value['long_method'] == 1:
-            issue = Issue('Long Method Smell Detected',
-                          body='Long Method Smell Detected')
-            self.issue_handler.create_issue(issue)
+        if value["long_class"] == 1:
+            issue = Issue("Long Class Smell Detected", body="Long Class Smell Detected")
+            await self.issue_handler.create_issue(issue)
+        if value["long_method"] == 1:
+            issue = Issue(
+                "Long Method Smell Detected", body="Long Method Smell Detected"
+            )
+            await self.issue_handler.create_issue(issue)
 
-    def _detect(self, data) -> Dict[str, str]:
+    async def _detect(self, data) -> Dict[str, str]:
         """
         Detect the type of data based on the provided data and model type.
 
@@ -61,43 +62,51 @@ class MainDetector(Detector):
         Returns:
             dict(int, int): The predicted classes of the data.
         """
-        logger.info("Detecting smell")
+        self.logger.info("Detecting smell")
 
-        model_dir = os.path.join(self.dir_path, 'model')
+        model_dir = os.path.join(self.dir_path, "model")
 
         class_model_path = os.path.join(model_dir, "class_model.json")
         function_model_path = os.path.join(model_dir, "method_model.json")
 
+        class_model = await self._load_model(class_model_path)
+        function_model = await self._load_model(function_model_path)
+
+        config = RedisConfig()
+        server = RedisServer(config)
+
+        tasks = [
+            self._process_data(key, value, class_model, function_model, server)
+            for key, value in data.items()
+        ]
+        await asyncio.gather(*tasks)
+
+        return data
+
+    async def _load_model(self, model_path):
         try:
-            class_model = xgb.XGBClassifier()
-            class_model.load_model(class_model_path)
-
-            function_model = xgb.XGBClassifier()
-            function_model.load_model(function_model_path)
-
+            model = xgb.XGBClassifier()
+            model.load_model(model_path)
+            return model
         except FileNotFoundError:
             self.logger.error("Model not found.")
             raise FileNotFoundError("Model not found.")
 
-        config = RedisConfig()
-        server = RedisServer(config)
-        
-        # data = json.loads(data)
-        for key, value in data.items():
-            value_list = list(value.values())
-            value["long_class"] = class_model.predict([value_list])[0]
-            value["long_method"] = function_model.predict([value_list])[0]
+    async def _save_to_redis(self, server, key, value):
+        try:
+            # Save the value in the Redis server
+            server.set_value(key, value)
+        except Exception as e:
+            self.logger.error(e)
 
-            try:
-                # Save the value in the Redis server
-                server.set_value(key, value)
-            except Exception as e:
-                self.logger.error(e)
+    async def _process_data(self, key, value, class_model, function_model, server):
+        value_list = list(value.values())
+        value["long_class"] = class_model.predict([value_list])[0]
+        value["long_method"] = function_model.predict([value_list])[0]
 
-            if self.issue_handler is not None:
-                self._create_issue_if_smell_detected(value)
-
-        return data
+        await self._save_to_redis(server, key, value)
+        if self.issue_handler is not None:
+            await self._create_issue_if_smell_detected(value)
 
 
 def detect_smell(data: dict, detector: Detector) -> Dict[str, str]:
