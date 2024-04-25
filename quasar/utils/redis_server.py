@@ -110,7 +110,7 @@ class RedisServer:
         return self.server.keys()
 
 
-def generate_report(config: RedisConfig, format: str, data: dict | str) -> None:
+def generate_report(config: RedisConfig, format: str, data: dict | str, report_path:str) -> None:
     def convert_html_to_pdf(source_html, output_filename):
         result_file = open(output_filename, "w+b")
         pisa_status = pisa.CreatePDF(source_html, dest=result_file)
@@ -135,15 +135,15 @@ def generate_report(config: RedisConfig, format: str, data: dict | str) -> None:
     template = env.get_template('report_template.html')
 
     html = template.render(time_now=datetime.datetime.now(), files=data)
-    with open('report.html', 'w') as f:
+    with open(report_path, 'w') as f:
         f.write(html)
 
     if format == 'pdf':
-        if not convert_html_to_pdf(html, 'report.pdf'):
+        if not convert_html_to_pdf(html, report_path):
             logger.info('PDF report generated successfully.')
 
-        if os.path.exists('report.html'):
-            os.remove('report.html')
+        if os.path.exists(report_path):
+            os.remove(report_path)
             logger.info('HTML report deleted successfully.')
         else:
             logger.error('HTML report not found.')

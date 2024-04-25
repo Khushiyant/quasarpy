@@ -7,8 +7,7 @@ from quasar.utils import analyse
 from quasar.algorithm.detector import MainDetector, detect_smell
 from quasar.handler.issue import IssueHandler, Repository
 from quasar.utils.redis_server import generate_report, RedisConfig
-import json
-
+import asyncio
 
 class ASCIICommandClass(click.Group):
     def get_help(self, ctx):
@@ -74,7 +73,7 @@ def detect(path, format, solution, create_issue, output) -> None:
                 if format in ["json", "pdf", "html"]:
                     try:
                         detector = MainDetector(issue_handler=issue_handler)
-                        data = detect_smell(data_json, detector)
+                        data = asyncio.run(detect_smell(data_json, detector))
 
                         if not format or not output:
                             raise ValueError("Format and output path are required")
@@ -88,13 +87,12 @@ def detect(path, format, solution, create_issue, output) -> None:
                             with open(report_path, "w") as f:
                                 f.write(data)
                         else: 
-                            with open(report_path, "w") as f:
-                                if not data:
-                                    raise ValueError("No data to write")
-                                
-                                generate_report(
-                                    config=redis_config, format=format, data=data
-                                )
+                            if not data:
+                                raise ValueError("No data to write")
+                            
+                            generate_report(
+                                config=redis_config, format=format, data=data, report_path=report_path
+                            )
 
                     except Exception as e:
                         raise e
