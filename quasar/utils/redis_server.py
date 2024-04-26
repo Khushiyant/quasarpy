@@ -12,22 +12,21 @@ class RedisConfig(pydantic.BaseModel):
     Configuration model for Redis server.
     """
 
-    model_config = pydantic.ConfigDict(
-        env_file='.env', env_file_encoding='utf-8')
-    host: str = os.getenv('LOCALHOST', 'localhost')
-    port: int = os.getenv('DB_PORT', 6379)
-    db: int = os.getenv('DB', 0)
+    model_config = pydantic.ConfigDict(env_file=".env", env_file_encoding="utf-8")
+    host: str = os.getenv("LOCALHOST", "localhost")
+    port: int = os.getenv("DB_PORT", 6379)
+    db: int = os.getenv("DB", 0)
 
-    @pydantic.field_validator('port')
+    @pydantic.field_validator("port")
     def check_port(cls, v):
         if v < 0 or v > 65535:
-            raise ValueError('Port number must be between 0 and 65535')
+            raise ValueError("Port number must be between 0 and 65535")
         return v
 
-    @pydantic.field_validator('db')
+    @pydantic.field_validator("db")
     def check_db(cls, v):
         if v < 0 or v > 15:
-            raise ValueError('Database number must be between 0 and 15')
+            raise ValueError("Database number must be between 0 and 15")
         return v
 
 
@@ -54,14 +53,15 @@ class RedisServer:
     logger = logger
 
     def __init__(self, config: RedisConfig):
-        self.logger.info('RedisServer initialized.')
+        self.logger.info("RedisServer initialized.")
         try:
             self.config = config
         except pydantic.ValidationError as e:
             self.logger.error(e)
             raise e
         self.server = redis.Redis(
-            host=self.config.host, port=self.config.port, db=self.config.db)
+            host=self.config.host, port=self.config.port, db=self.config.db
+        )
 
     def set_value(self, key, value):
         """
@@ -110,12 +110,15 @@ class RedisServer:
         return self.server.keys()
 
 
-def generate_report(config: RedisConfig, format: str, data: dict | str, report_path:str) -> None:
+def generate_report(
+    config: RedisConfig, format: str, data: dict | str, report_path: str
+) -> None:
     def convert_html_to_pdf(source_html, output_filename):
         result_file = open(output_filename, "w+b")
         pisa_status = pisa.CreatePDF(source_html, dest=result_file)
         result_file.close()
         return pisa_status.err
+
     """
     Generates a report of all keys in the Redis server.
 
@@ -129,23 +132,24 @@ def generate_report(config: RedisConfig, format: str, data: dict | str, report_p
 
     """
 
-    logger.info('Generating report')
+    logger.info("Generating report")
 
-    env = Environment(loader=FileSystemLoader('quasar/utils/templates'))
-    template = env.get_template('report_template.html')
+    env = Environment(loader=FileSystemLoader("quasar/utils/templates"))
+    template = env.get_template("report_template.html")
+    report_path_html = f"{report_path}.html"
 
     html = template.render(time_now=datetime.datetime.now(), files=data)
-    with open(report_path, 'w') as f:
+    with open(report_path_html, "w") as f:
         f.write(html)
 
-    if format == 'pdf':
-        if not convert_html_to_pdf(html, report_path):
-            logger.info('PDF report generated successfully.')
+    if format == "pdf":
+        if not convert_html_to_pdf(html, f"{report_path}.{format}"):
+            logger.info("PDF report generated successfully.")
 
-        if os.path.exists(report_path):
-            os.remove(report_path)
-            logger.info('HTML report deleted successfully.')
+        if os.path.exists(report_path_html):
+            os.remove(report_path_html)
+            logger.info("HTML report deleted successfully.")
         else:
-            logger.error('HTML report not found.')
+            logger.error("HTML report not found.")
 
-    logger.info('Report generated successfully.')
+    logger.info("Report generated successfully.")

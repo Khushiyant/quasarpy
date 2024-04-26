@@ -30,11 +30,10 @@
 
 <body>
     <h1>Coding Standard Report</h1>
-    <p>Generation on: {{ time_now }}</p>
+    <p>Generated on: {{ time_now }}</p>
     <table>
         <thead>
             <tr>
-                <th>File Path</th>
                 <th>LOC</th>
                 <th>LLOC</th>
                 <th>SLOC</th>
@@ -61,7 +60,9 @@
         <tbody>
             {% for file in files %}
             <tr>
-                <td>{{ file }}</td>
+                <td colspan="21"><strong>File Path:</strong> {{ file }}</td>
+            </tr>
+            <tr>
                 <td>{{ files[file].loc }}</td>
                 <td>{{ files[file].lloc }}</td>
                 <td>{{ files[file].sloc }}</td>
@@ -84,6 +85,15 @@
                 <td>{{ files[file].long_class }}</td>
                 <td>{{ files[file].long_method }}</td>
             </tr>
+            {% if files[file].solution %}
+            <tr>
+                <td colspan="21" style="text-align: left;"><strong>Solution:</strong> {{ files[file].solution }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="21" style="text-align: left;"><strong>Solution:</strong> No changes required</td>
+            </tr>
+            {% endif %}
             {% endfor %}
         </tbody>
 </html>

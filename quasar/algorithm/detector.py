@@ -6,16 +6,35 @@ import xgboost as xgb
 from quasar.handler.issue import Issue, IssueHandler
 from quasar.utils.redis_server import RedisConfig, RedisServer
 import asyncio
+from quasar.algorithm.llm import LLM
 
 
 class Detector(ABC):
     logger = logger
 
-    def __init__(self):
+    def __init__(self, llm: LLM, issue_handler: IssueHandler | None) -> None:
         self.logger.info("Detector class initialized.")
+        self.llm = llm
+        self.issue_handler = issue_handler
 
     @abstractmethod
-    def _detect(self, data) -> Dict[int, int]:
+    async def _detect(self, data) -> Dict[int, int]:
+        ...
+
+    @abstractmethod
+    async def _load_model(self, model_path):
+        ...
+
+    @abstractmethod
+    async def _save_to_redis(self, server, key, value):
+        ...
+
+    @abstractmethod
+    async def _process_data(self, key, value, class_model, function_model, server):
+        ...
+
+    @abstractmethod
+    async def _create_issue_if_smell_detected(self, value):
         ...
 
 
@@ -28,9 +47,8 @@ class MainDetector(Detector):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     logger = logger
 
-    def __init__(self, issue_handler: IssueHandler | None) -> None:
-        super().__init__()
-        self.issue_handler = issue_handler
+    def __init__(self, llm: LLM, issue_handler: IssueHandler | None) -> None:
+        super().__init__(llm=llm, issue_handler=issue_handler)
         self.logger.info("MainDetector class initialized.")
 
     async def _create_issue_if_smell_detected(self, value):
@@ -105,8 +123,14 @@ class MainDetector(Detector):
         value["long_method"] = function_model.predict([value_list])[0]
 
         await self._save_to_redis(server, key, value)
+
         if self.issue_handler is not None:
             await self._create_issue_if_smell_detected(value)
+
+        value["solution"] = None
+        if value["long_class"] == 1 or value["long_method"] == 1:
+            solution = await self.llm.generate_solution(value)
+            value["solution"] = solution
 
 
 def detect_smell(data: dict, detector: Detector) -> Dict[str, str]:

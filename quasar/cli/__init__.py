@@ -8,6 +8,7 @@ from quasar.algorithm.detector import MainDetector, detect_smell
 from quasar.handler.issue import IssueHandler, Repository
 from quasar.utils.redis_server import generate_report, RedisConfig
 import asyncio
+from quasar.algorithm import LLM, LLMConfig
 
 class ASCIICommandClass(click.Group):
     def get_help(self, ctx):
@@ -43,7 +44,10 @@ def cli() -> None:
 @click.option(
     "--output", "-o", type=click.Path(exists=False), help="Output file path for report"
 )
-def detect(path, format, solution, create_issue, output) -> None:
+@click.option(
+    "--offline", is_flag=False, help="Use the offline version of the model"
+)
+def detect(path, format, solution, create_issue, output, offline) -> None:
     """
     Detects the specified type of object in the given path and formats the output.
 
@@ -72,7 +76,10 @@ def detect(path, format, solution, create_issue, output) -> None:
                 data_json = analyse([path])
                 if format in ["json", "pdf", "html"]:
                     try:
-                        detector = MainDetector(issue_handler=issue_handler)
+                        llm_config = LLMConfig()
+                        llm = LLM(llm_config, is_online=True if not offline else False)
+
+                        detector = MainDetector(llm=llm, issue_handler=issue_handler)
                         data = asyncio.run(detect_smell(data_json, detector))
 
                         if not format or not output:
@@ -80,18 +87,21 @@ def detect(path, format, solution, create_issue, output) -> None:
 
                         report_path = os.path.join(
                             output,
-                            f'report_{datetime.now().strftime("%H%M%S")}.{format}',
+                            f'report_{datetime.now().strftime("%H%M%S")}',
                         )
 
                         if format == "json":
                             with open(report_path, "w") as f:
                                 f.write(data)
-                        else: 
+                        else:
                             if not data:
                                 raise ValueError("No data to write")
-                            
+
                             generate_report(
-                                config=redis_config, format=format, data=data, report_path=report_path
+                                config=redis_config,
+                                format=format,
+                                data=data,
+                                report_path=report_path,
                             )
 
                     except Exception as e:
