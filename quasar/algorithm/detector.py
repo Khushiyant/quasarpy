@@ -7,6 +7,8 @@ from quasar.handler.issue import Issue, IssueHandler
 from quasar.utils.redis_server import RedisConfig, RedisServer
 import asyncio
 from quasar.algorithm.llm import LLM
+from quasar.utils import PROMPT_TEMPLATE
+
 
 
 class Detector(ABC):
@@ -129,7 +131,16 @@ class MainDetector(Detector):
 
         value["solution"] = None
         if value["long_class"] == 1 or value["long_method"] == 1:
-            solution = await self.llm.generate_solution(value)
+            code_smell = {"long_class": value["long_class"], "long_method": value["long_method"]}
+            try:
+                with open(key, "r") as f:
+                    prompt = PROMPT_TEMPLATE.format(
+                        code_smell=code_smell, code=f.read(), additional_details=value
+                    )
+            except FileNotFoundError:
+                self.logger.error("File not found.")
+                raise FileNotFoundError("File not found.")
+            solution = self.llm.generate(prompt=prompt)
             value["solution"] = solution
 
 
