@@ -3,7 +3,7 @@ name: Upload python package
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
