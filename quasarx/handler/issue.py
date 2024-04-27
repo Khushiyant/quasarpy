@@ -2,7 +2,7 @@ from github import Github, Auth, GithubException
 
 from dataclasses import dataclass, field
 
-from quasar.utils.logger import logger
+from quasarx.utils.logger import logger
 from typing import AnyStr, List
 import pydantic 
 

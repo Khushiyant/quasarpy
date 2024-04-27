@@ -1,9 +1,9 @@
 '''This module contains the main() function, which is the entry point for the
 command line interface.'''
 from dotenv import load_dotenv
-from quasar.cli import cli
-from quasar.utils import logger
-from quasar._version import __version__ as _version
+from quasarx.cli import cli
+from quasarx.utils import logger
+from quasarx._version import __version__ as _version
 
 __version__ = _version
 

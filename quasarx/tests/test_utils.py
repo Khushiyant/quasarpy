@@ -1,6 +1,6 @@
-from quasar.utils.errors import LiteralEvalError
-from quasar.utils.logger import logger
-from quasar.utils.redis_server import RedisConfig
+from quasarx.utils.errors import LiteralEvalError
+from quasarx.utils.logger import logger
+from quasarx.utils.redis_server import RedisConfig
 
 
 # Test the logger

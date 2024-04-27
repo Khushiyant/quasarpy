@@ -1,6 +1,6 @@
 import redis
 import os
-from quasar.utils.logger import logger
+from quasarx.utils.logger import logger
 import pydantic
 import datetime
 from jinja2 import Environment, FileSystemLoader

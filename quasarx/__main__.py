@@ -1,4 +1,4 @@
 """Module allowing for ``python -m quasar ...``."""
-from quasar import main
+from quasarx import main
 
 main()
