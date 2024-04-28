@@ -3,7 +3,12 @@ name: Upload python package
 on:
   push:
     branches:
-      - main
+      - publish
+  pull_request:
+    branches:
+      - publish
+  workflow_dispatch:
+
 
 jobs:
   deploy:
