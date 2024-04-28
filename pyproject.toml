@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "quasarpy"
-version = "0.1.1"
+version = "0.1.2"
 description = "Quasar is python package that can be used for smell detection along with detailed report in various formats such as html, pdf, etc."
 authors = ["Khushiyant <khushiyant2002@gmail.com>"]
 license = "GNU GENERAL PUBLIC LICENSE"
