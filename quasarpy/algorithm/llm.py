@@ -38,7 +38,13 @@ class LLM:
 
     def _generate_online(self, prompt: str, **kwargs) -> str:
         try:
-            client = huggingface_hub.InferenceClient(token=os.getenv("HUGGINGFACE_TOKEN"))
+            try:
+                token = os.getenv("HUGGINGFACE_TOKEN")
+            except KeyError:
+                self.logger.error("Hugging Face API token not found in the environment variables.")
+                raise
+
+            client = huggingface_hub.InferenceClient(token=token)
             response = client.text_generation(
                 prompt=prompt,
                 model="mistralai/Mistral-7B-Instruct-v0.2",

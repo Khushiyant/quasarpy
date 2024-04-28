@@ -6,6 +6,9 @@ authors = ["Khushiyant <khushiyant2002@gmail.com>"]
 license = "GNU GENERAL PUBLIC LICENSE"
 readme = "README.md"
 
+[tool.poetry.scripts]
+quasar = "quasarpy.cli:main"
+
 [tool.poetry.dependencies]
 python = "^3.10"
 sphinx = "^7.2.6"
