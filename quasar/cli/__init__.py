@@ -1,14 +1,14 @@
 import click
 import os
 from datetime import datetime
-from quasarx._version import __version__ as _version
-from quasarx.utils import ASCII_ART
-from quasarx.utils import analyse
-from quasarx.algorithm.detector import MainDetector, detect_smell
-from quasarx.handler.issue import IssueHandler, Repository
-from quasarx.utils.redis_server import generate_report, RedisConfig
+from quasarpy._version import __version__ as _version
+from quasarpy.utils import ASCII_ART
+from quasarpy.utils import analyse
+from quasarpy.algorithm.detector import MainDetector, detect_smell
+from quasarpy.handler.issue import IssueHandler, Repository
+from quasarpy.utils.redis_server import generate_report, RedisConfig
 import asyncio
-from quasarx.algorithm import LLM, LLMConfig
+from quasarpy.algorithm import LLM, LLMConfig
 
 class ASCIICommandClass(click.Group):
     def get_help(self, ctx):

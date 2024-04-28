@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
 import os
 from typing import Dict
-from quasarx.utils.logger import logger
+from quasarpy.utils.logger import logger
 import xgboost as xgb
-from quasarx.handler.issue import Issue, IssueHandler
-from quasarx.utils.redis_server import RedisConfig, RedisServer
+from quasarpy.handler.issue import Issue, IssueHandler
+from quasarpy.utils.redis_server import RedisConfig, RedisServer
 import asyncio
-from quasarx.algorithm.llm import LLM
-from quasarx.utils import PROMPT_TEMPLATE
+from quasarpy.algorithm.llm import LLM
+from quasarpy.utils import PROMPT_TEMPLATE
 
 
 

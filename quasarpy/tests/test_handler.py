@@ -1,6 +1,6 @@
 import pytest
 
-from quasarx.handler import Issue, Repository
+from quasarpy.handler import Issue, Repository
 import pydantic
 
 

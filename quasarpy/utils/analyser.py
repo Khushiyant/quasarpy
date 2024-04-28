@@ -1,7 +1,7 @@
 from radon.cli.harvest import RawHarvester
 from radon.cli import Config
 from radon.metrics import h_visit
-from quasarx.utils.errors import LiteralEvalError
+from quasarpy.utils.errors import LiteralEvalError
 import json
 
 

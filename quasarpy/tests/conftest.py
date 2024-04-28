@@ -1,6 +1,6 @@
 import pytest
-from quasarx.handler import Repository
-from quasarx.handler import Issue
+from quasarpy.handler import Repository
+from quasarpy.handler import Issue
 
 
 @pytest.fixture

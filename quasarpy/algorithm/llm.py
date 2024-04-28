@@ -1,5 +1,5 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from quasarx.utils.logger import logger
+from quasarpy.utils.logger import logger
 from dataclasses import dataclass
 import huggingface_hub 
 import os
