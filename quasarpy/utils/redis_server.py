@@ -134,7 +134,7 @@ def generate_report(
 
     logger.info("Generating report")
 
-    env = Environment(loader=FileSystemLoader("quasar/utils/templates"))
+    env = Environment(loader=FileSystemLoader("quasarpy/utils/templates"))
     template = env.get_template("report_template.html")
     report_path_html = f"{report_path}.html"
 
