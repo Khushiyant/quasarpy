@@ -1,13 +1,14 @@
 [tool.poetry]
 name = "quasarpy"
-version = "0.1.2"
+version = "0.1.3"
 description = "Quasar is python package that can be used for smell detection along with detailed report in various formats such as html, pdf, etc."
 authors = ["Khushiyant <khushiyant2002@gmail.com>"]
-license = "GNU GENERAL PUBLIC LICENSE"
+license = "GPL-3.0-or-later"
 readme = "README.md"
+include = ["assets", 'LICENSE']
 
 [tool.poetry.scripts]
-quasar = "quasarpy.cli:main"
+quasar = "quasarpy:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
