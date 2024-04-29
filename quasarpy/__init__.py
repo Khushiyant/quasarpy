@@ -3,16 +3,15 @@ command line interface.'''
 from dotenv import load_dotenv
 from quasarpy.cli import cli
 from quasarpy.utils import logger
-from quasarpy._version import __version__ as _version
 
-__version__ = _version
+__version__ = "0.0.0"
 
 load_dotenv()  # Load environment variables from .env file
 
 
 def main():
     '''Entry point for the command line interface.'''
-    logger.info(f"Quasar {_version} started")
+    logger.info(f"Quasar {__version__} started")
     try: 
         cli()
     except NotImplementedError as e:

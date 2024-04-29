@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "quasarpy"
-version = "0.1.6"
+version = "0.0.0"
 description = "Quasar is python package that can be used for smell detection along with detailed report in various formats such as html, pdf, etc."
 authors = ["Khushiyant <khushiyant2002@gmail.com>"]
 license = "GPL-3.0-or-later"
@@ -9,6 +9,9 @@ include = ["assets", 'LICENSE']
 
 [tool.poetry.scripts]
 quasar = "quasarpy:main"
+
+[tool.poetry-dynamic-versioning]
+enable = true
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -38,8 +41,8 @@ twine = "^5.0.0"
 ipykernel = "^6.29.3"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
 
 [tool.ruff]
 extend-include = ["*.ipynb", "__init__.py"]
