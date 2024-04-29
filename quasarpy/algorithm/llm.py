@@ -42,6 +42,8 @@ class LLM:
                 token = os.getenv("HUGGINGFACE_TOKEN")
             except KeyError:
                 self.logger.error("Hugging Face API token not found in the environment variables.")
+                with open(".env", "w") as f:
+                    f.write("HUGGINGFACE_TOKEN=YOUR_API_TOKEN")
                 raise
 
             client = huggingface_hub.InferenceClient(token=token)
