@@ -134,7 +134,9 @@ def generate_report(
 
     logger.info("Generating report")
 
+
     env = Environment(loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates")))
+
     template = env.get_template("report_template.html")
     report_path_html = f"{report_path}.html"
 
