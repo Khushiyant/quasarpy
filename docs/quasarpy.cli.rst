@@ -1,10 +1,10 @@
-quasar.cli package
-==================
+quasarpy.cli package
+====================
 
 Module contents
 ---------------
 
-.. automodule:: quasar.cli
+.. automodule:: quasarpy.cli
    :members:
    :undoc-members:
    :show-inheritance:
