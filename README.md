@@ -1,9 +1,21 @@
-![](https://github.com/Khushiyant/quasarpy/blob/164bc8d8ddfa32f8228fc886871b5a24429c61bb/assets/logo_complete_svg.svg)
+![quasar-logo](https://raw.githubusercontent.com/Khushiyant/quasarpy/8346dfd09733a5e8a6c72018a011a128afabcc34/assets/logo_complete_svg.svg)
 ## Overview
 ![GitHub](https://img.shields.io/github/license/Khushiyant/quasar?&style=for-the-badge)
 ![Python](https://img.shields.io/badge/Made%20With%20Python-lightblue?logo=python&&style=for-the-badge&logoColor=black)
 
 Quasar is python package that can be used for smell detection along with detailed report in various formats such as html, pdf, etc. 
+
+# Table of contents
+
+- [Overview](#overview)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Installation](#installation)
+  - [Command Line Interface](#command-line-interface)
+    - [Arguments](#arguments)
+- [Contributing](#contributing)
+    - [Versioning](#versioning)
+- [License](#license)
 
 ## Usage
 
@@ -30,6 +42,13 @@ quasar detect --path <path_to_project> --format <format-output> --output <path_t
 - `--help` : Display help message
 - `--version` : Display version of the package
 - `--offline` : Run the LLM in offline mode/without internet connection (default: False)
+
+
+### Contributing
+
+#### Versioning
+
+We use [Sementic Versioning](http://semver.org/) for versioning the package releases.
 
 ## License
 
