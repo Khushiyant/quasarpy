@@ -1,11 +1,10 @@
 name: Upload python package
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-    tags:
-      - v*
+    types: [opened, reopened, synchronize]
 
 
 jobs:
