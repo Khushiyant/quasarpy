@@ -1,7 +1,7 @@
 import click
 import os
 from datetime import datetime
-from quasarpy import __version__ as _version
+from quasarpy._version import __version__ as _version
 from quasarpy.utils import ASCII_ART
 from quasarpy.utils import analyse
 from quasarpy.algorithm.detector import MainDetector, detect_smell
