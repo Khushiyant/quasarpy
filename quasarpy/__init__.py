@@ -3,7 +3,7 @@ command line interface.'''
 from dotenv import load_dotenv
 from quasarpy.cli import cli
 from quasarpy.utils import logger
-from quasarpy._version import __version___ as _version
+from quasarpy._version import _version_ as _version
 
 
 load_dotenv()  # Load environment variables from .env file
