@@ -89,6 +89,9 @@ class IssueHandler:
         Returns:
             None
         """
-        repo = Github.get_repo(self.repo.name)
-        repo.create_issue(title=issue.title, body=issue.body, labels=issue.labels)
-        self.logger.info('Issue successfully created.')
+        try:
+            repo = Github.get_repo(self.repo.name)
+            repo.create_issue(title=issue.title, body=issue.body, labels=issue.labels)
+            self.logger.info('Issue successfully created.')
+        except GithubException as e:
+            self.logger.error(f'Error creating issue: {e}')
