@@ -67,7 +67,7 @@ def detect(path, format, solution, create_issue, output, offline) -> None:
     issue_handler = IssueHandler(repo=Repository()) if create_issue else None
     redis_config = RedisConfig()
 
-    if not solution:
+    if solution:
         raise NotImplementedError("Solution flag not implemented yet")
 
     try:
