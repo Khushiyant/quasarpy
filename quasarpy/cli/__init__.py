@@ -10,6 +10,7 @@ from quasarpy.utils.redis_server import generate_report, RedisConfig
 import asyncio
 from quasarpy.algorithm import LLM, LLMConfig
 
+
 class ASCIICommandClass(click.Group):
     def get_help(self, ctx):
         return ASCII_ART + "\n" + super().get_help(ctx)
@@ -44,9 +45,7 @@ def cli() -> None:
 @click.option(
     "--output", "-o", type=click.Path(exists=False), help="Output file path for report"
 )
-@click.option(
-    "--offline", is_flag=False, help="Use the offline version of the model"
-)
+@click.option("--offline", is_flag=False, help="Use the offline version of the model")
 def detect(path, format, solution, create_issue, output, offline) -> None:
     """
     Detects the specified type of object in the given path and formats the output.
@@ -68,50 +67,51 @@ def detect(path, format, solution, create_issue, output, offline) -> None:
     issue_handler = IssueHandler(repo=Repository()) if create_issue else None
     redis_config = RedisConfig()
 
-    if solution:
+    if not solution:
         raise NotImplementedError("Solution flag not implemented yet")
-    else:
+
+    try:
+        if not path:
+            raise ValueError("Path is required")
+
+        data_json = analyse([path])
+        if format not in ["json", "pdf", "html"]:
+            raise NotImplementedError("Other format not implemented yet")
+
         try:
-            if path:
-                data_json = analyse([path])
-                if format in ["json", "pdf", "html"]:
-                    try:
-                        llm_config = LLMConfig()
-                        llm = LLM(llm_config, is_online=True if not offline else False)
+            llm_config = LLMConfig()
+            llm = LLM(llm_config, is_online=True if not offline else False)
 
-                        detector = MainDetector(llm=llm, issue_handler=issue_handler)
-                        data = asyncio.run(detect_smell(data_json, detector))
+            detector = MainDetector(llm=llm, issue_handler=issue_handler)
+            data = asyncio.run(detect_smell(data_json, detector))
 
-                        if not format or not output:
-                            raise ValueError("Format and output path are required")
+            if not format or not output:
+                raise ValueError("Format and output path are required")
 
-                        report_path = os.path.join(
-                            output,
-                            f'report_{datetime.now().strftime("%H%M%S")}',
-                        )
+            report_path = os.path.join(
+                output,
+                f'report_{datetime.now().strftime("%H%M%S")}',
+            )
 
-                        if format == "json":
-                            with open(report_path, "w") as f:
-                                f.write(data)
-                        else:
-                            if not data:
-                                raise ValueError("No data to write")
-
-                            generate_report(
-                                config=redis_config,
-                                format=format,
-                                data=data,
-                                report_path=report_path,
-                            )
-
-                    except Exception as e:
-                        raise e
-                else:
-                    raise NotImplementedError("Other format not implemented yet")
+            if format == "json":
+                with open(report_path, "w") as f:
+                    f.write(data)
             else:
-                raise ValueError("Path is required")
+                if not data:
+                    raise ValueError("No data to write")
+
+                generate_report(
+                    config=redis_config,
+                    format=format,
+                    data=data,
+                    report_path=report_path,
+                )
+
         except Exception as e:
             raise e
+
+    except Exception as e:
+        raise e
 
 
 if __name__ == "__main__":
