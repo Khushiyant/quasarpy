@@ -1,3 +1,5 @@
+import math
+
 class ComplexCalculator:
     def __init__(self, real_part, imaginary_part):
         self.real_part = real_part
