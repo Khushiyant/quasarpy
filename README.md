@@ -40,7 +40,6 @@ mv .env.example .env
 export HUGGINGFACE_TOKEN=<your_token>
 ```
 
-```bash
 ### Command Line Interface
 
 Quasar can be used as a command line tool to detect smells in a project. The command line interface can be used as follows:
