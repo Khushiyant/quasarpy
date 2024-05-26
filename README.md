@@ -25,7 +25,22 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install quasarp
 ```bash
 pip install quasarpy
 ```
+Since, quasrpy relies on hugging face for its online LLM reference, so it is required to set the environment variable `HUGGINGFACE_TOKEN` with the value of your hugging face token. You can get the token by signing up on [Hugging Face](https://huggingface.co/). You can use two of the following ways to setup the token:
 
+- Using the `.env` file
+
+```bash
+mv .env.example .env
+
+```
+
+- Using the command Line
+
+```bash
+export HUGGINGFACE_TOKEN=<your_token>
+```
+
+```bash
 ### Command Line Interface
 
 Quasar can be used as a command line tool to detect smells in a project. The command line interface can be used as follows:
